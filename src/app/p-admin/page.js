@@ -57,23 +57,6 @@ const HomePage = () => {
   const [tours, setTours] = useState([]);
   const router = useRouter();
 
-
-  const checkAuth = () => {
-    const cookies = document.cookie.split(';').reduce((acc, cookie) => {
-      const [key, value] = cookie.trim().split('=');
-      acc[key] = value;
-      return acc;
-    }, {});
-
-    if (!cookies.authToken) {
-      router.push('/p-admin/admin-auth');
-    }
-  };
-
-  useEffect(() => {
-    checkAuth();
-  }, []);
-
   useEffect(() => {
     const fetchTours = async () => {
       const res = await fetch("/api/tour");
