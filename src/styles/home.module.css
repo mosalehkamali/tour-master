@@ -1,0 +1,208 @@
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  
+  .header{
+    width: 100%;
+    height: auto;
+    background-image: url('/images/qom.jpg');
+    background-repeat: no-repeat;
+    background-position: center center;
+    background-size: cover;
+    border-radius:  0 0 40% 40%;
+}
+
+.headerContent {
+    width: 100%;
+    height: 100%;
+    backdrop-filter: blur(10px) saturate(200%);
+    -webkit-backdrop-filter: blur(10px) saturate(200%);
+    background-color: rgba(206, 207, 210, 0.5);
+    border-radius:  0 0 40% 40%;    
+    padding-top: 6rem;
+    border: 1px solid rgba(255, 255, 255, 0.125);
+}
+
+  .sliderImage {
+    width: 100%;
+    height: auto;
+  }
+  
+  .mainContent {
+    width: 90%;
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+  }
+  
+  .introduction {
+    height: 100%;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 3rem;
+  }
+  
+  .introduction h1 {
+    font-size: 3rem;
+    color: var(--text-color);
+    margin-bottom: 1rem;
+    font-family: yekanFat;
+  }
+  .sectionTitle{
+    font-family: yekanHeavy;
+    font-size: 1.5rem;
+    padding-top: 3rem;
+    margin-bottom: 1rem;
+    position: relative;
+  }
+
+  .sectionTitle:after{
+    content: "";
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    height: 1px;
+    width: 100%;
+    background-color: var(--text-color);
+}
+
+  .introduction p {
+    font-size: 1.2rem;
+    color: #555;
+    line-height: 1.6;
+  }
+  
+  .services {
+    margin-bottom: 3rem;
+  }
+  
+  .services h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 2rem;
+  }
+  
+  .serviceCards {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+  }
+  
+  .card {
+    background: #fff;
+    border: 1px solid #eee;
+    border-radius: 10px;
+    width: 300px;
+    margin: 1rem;
+    padding: 2rem;
+    text-align: center;
+    transition: box-shadow 0.3s ease;
+  }
+  
+  .card:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .cardIcon {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1rem;
+  }
+  
+  .card h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+  }
+  
+  .card p {
+    font-size: 1rem;
+    color: #666;
+    line-height: 1.5;
+  }
+  
+  .contactUs {
+    background: #f5f5f5;
+    padding: 2rem;
+    border-radius: 10px;
+  }
+  
+  .contactUs h2 {
+    text-align: center;
+    font-size: 2rem;
+    color: #333;
+    margin-bottom: 1rem;
+  }
+  
+  .contactUs p {
+    text-align: center;
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 2rem;
+  }
+  
+  .contactForm {
+    max-width: 600px;
+    margin: 0 auto;
+  }
+  
+  .contactForm input,
+  .contactForm textarea {
+    width: 100%;
+    padding: 0.75rem;
+    margin-bottom: 1rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .contactForm textarea {
+    height: 150px;
+    resize: vertical;
+  }
+  
+  .contactForm button {
+    width: 100%;
+    padding: 0.75rem;
+    background: #333;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s ease;
+  }
+  
+  .contactForm button:hover {
+    background: #555;
+  }
+  
+.suportBtn{
+  margin-top: 2rem;
+  font-family: yekanHeavy;
+  font-size: 1.2rem;
+  gap: 1rem;
+}
+
+  /* ریسپانسیو برای موبایل */
+  @media (max-width: 768px) {
+    .serviceCards {
+      flex-direction: column;
+      align-items: center;
+    }
+    .headerContent,.header{
+        border-radius: 0;
+    }
+    
+    .card {
+      width: 100%;
+      margin: 1rem 0;
+    }
+  }
+  

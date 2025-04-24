@@ -1,0 +1,34 @@
+.Desc {
+  margin: 3rem 0;
+}
+
+.title {
+  font-family: yekanHeavy;
+  font-size: 1.5rem;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.title:after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  height: 1px;
+  width: 100%;
+  background-color: var(--text-color);
+}
+.places {
+  display: flex;
+  justify-content: space-between;
+  margin: 2rem 0;
+}
+
+@media (max-width: 850px) {
+    .places {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2rem;
+      }
+}

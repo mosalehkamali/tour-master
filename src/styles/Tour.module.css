@@ -1,0 +1,63 @@
+.tour{
+  padding: 5rem;
+}
+
+.tour__container {
+  display: flex;
+  flex-direction: row-reverse;
+  margin-bottom: 5rem;
+  justify-content: space-between;
+}
+
+.tourImg {
+  width: 50%;
+  object-fit: cover;
+  height: auto;
+  max-height: 350px;
+  border-radius: 10px;
+}
+.discription {
+  padding: 1rem 1rem 1rem 3rem;
+}
+.tourTitle {
+  font-size: 2.5rem;
+  font-family: yekanFat;
+  margin-bottom: 1rem;
+}
+
+.tourTitle:after {
+  content: "";
+  height: 1px;
+  width: 100%;
+  display: block;
+  background-color: var(--text-color);
+}
+
+.discTitle {
+  font-size: 1.5rem;
+  font-family: yekanHeavy;
+  padding-right: 1rem;
+}
+
+.tourDisc {
+  font-size: 1.25rem;
+  padding-right: 2rem;
+  white-space: initial;
+}
+
+@media screen and (max-width: 900px) {
+  .tour__container {
+    flex-direction: column;
+    margin-bottom: 3rem;
+  }
+  .tourImg {
+    width: 80% !important;
+    height: auto;
+    object-fit: cover;
+  }
+  .tourDisc {
+    font-size: 1rem;
+    padding: 1rem;
+    width: 50%;
+  }
+}

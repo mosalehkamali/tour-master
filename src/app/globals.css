@@ -1,0 +1,73 @@
+:root {
+  --main-bg-color: #eaeaea;
+  --text-color: #111827;
+  --gray: #b0b0b0;
+  --lowYellow: #fff7df;
+  --yellow: #ffb901;
+  --lowGreen: #9fce7da9;
+  --green: #05a305;
+  --lowRed: #ff5a5f;
+  --red: #ff0810;
+  --lowBlue: #5b99d6;
+  --blue: #0a66c2;
+}
+
+
+@font-face {
+  font-family: yekanReg;
+  src: url(/fonts/YekanBakh-Regular.woff);
+}
+@font-face {
+  font-family: yekanHeavy;
+  src: url(/fonts/YekanBakh-Heavy.woff);
+}
+
+@font-face {
+  font-family: yekanFat;
+  src: url(/fonts/YekanBakh-Fat.woff);
+}
+
+::placeholder {
+  color: var(--text-color);
+  font-family: yekanReg;
+}
+
+* {
+  box-sizing: border-box;
+  padding: 0;
+  margin: 0;
+  font-family: yekanReg;
+}
+
+html,
+body {
+  direction: rtl;
+  max-width: 100vw;
+  overflow-x: hidden;
+  background-color: var(--main-bg-color);
+  color: var(--text-color);
+  background-color: var(--main-bg-color);
+  background-image: 
+      radial-gradient(at 47% 33%, hsl(132.18, 76%, 59%) 0, transparent 59%), 
+      radial-gradient(at 82% 65%, hsl(219.51, 77%, 60%) 0, transparent 55%);
+
+}
+
+a {
+  text-decoration: none;
+}
+
+input[type=number]::-webkit-inner-spin-button, 
+input[type=number]::-webkit-outer-spin-button { 
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    margin: 0; 
+}
+
+@media screen and (max-width: 900px) {
+  html,
+  body {
+    padding: 0;
+  }
+}

@@ -1,0 +1,77 @@
+.infoTitle {
+  font-size: 1.5rem;
+    font-family: yekanHeavy;
+    padding-right: 1rem;
+    margin-bottom: 1rem;
+}
+.infoTitle:after{
+  content: "";
+  height: 1px;
+  width: 100%;
+  display: block;
+  background-color: var(--text-color);
+}
+
+.signinForm {
+  display: grid;
+  grid-template-columns: repeat(3, auto);
+  gap: 1rem 2rem;
+  margin-bottom: 5rem;
+}
+
+.formInput {
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  font-size: 1.25rem;
+  padding-right: 2rem;
+}
+
+.datePickerInput {
+  background-color: var(--gray);
+  text-decoration: none;
+  border: 1px solid var(--text-color);
+  border-radius: 1rem;
+  padding: 0.5rem;
+  font-size: 1rem;
+}
+
+.genderSelector {
+  display: flex;
+  gap: 2rem;
+  padding-right: 1rem;
+  font-weight: 800;
+}
+
+.sininBtn {
+  width: 60%;
+  justify-self: center;
+  align-self: flex-end;
+  grid-row: 5/6;
+  grid-column: 2/3;
+}
+
+.inputError{
+  font-size: 1rem;
+  color: var(--red);
+}
+
+@media screen and (max-width: 900px) {
+  .signinForm{
+    grid-template-columns: repeat(2, auto);
+  }
+  
+}
+@media screen and (max-width: 500px) {
+  .signinForm{
+   display: flex;
+   flex-direction: column;
+   margin-bottom: 3rem;
+  }
+
+  .sininBtn{
+    align-self: center;
+    width: auto;
+    margin-top: 1rem;
+  }
+}
