@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { FaTrash, FaPlus } from "react-icons/fa";
 import { useRouter } from "next/navigation"; // useRouter in App Router
+import Swal from 'sweetalert2';
 
 const TourList = styled.div`
   display: flex;
@@ -67,12 +68,35 @@ const HomePage = () => {
     fetchTours();
   }, []);
 
-  const handleDelete = async (id) => {
+
+const handleDelete = async (id) => {
+  // نمایش پیام تایید
+  const result = await Swal.fire({
+    title: 'آیا مطمئن هستید؟',
+    text: 'این تور حذف خواهد شد!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonText: 'بله، حذف کن!',
+    cancelButtonText: 'خیر، انصراف',
+  });
+
+  // اگر کاربر تایید کرد
+  if (result.isConfirmed) {
     await fetch(`/api/tour/remove/${id}`, {
       method: "DELETE",
     });
+    
+    // به‌روزرسانی وضعیت تورها پس از حذف
     setTours(tours.filter((tour) => tour._id !== id));
-  };
+    
+    // نمایش پیام موفقیت
+    Swal.fire('حذف شد!', 'تور با موفقیت حذف شد.', 'success');
+  } else {
+    // اگر کاربر حذف رو لغو کرد، هیچ کاری نکن
+    return;
+  }
+};
+
 
   return (
     <div style={{padding:"3rem 1rem"}}>

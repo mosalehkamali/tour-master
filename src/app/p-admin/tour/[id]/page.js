@@ -125,30 +125,6 @@ const TourDetailsPage = ({ params }) => {
               <InfoLabel>آدرس:</InfoLabel>
               <InfoValue>{passenger.address}</InfoValue>
             </InfoBlock>
-            {/* <InfoBlock> 
-              <InfoLabel>ماه سفر:</InfoLabel>
-              <InfoValue>{passenger.month}</InfoValue>
-            </InfoBlock>
-            <InfoBlock>
-              <InfoLabel>وسیله نقلیه:</InfoLabel>
-              <InfoValue>{passenger.vehicule}</InfoValue>
-            </InfoBlock>
-            <InfoBlock>
-              <InfoLabel>محل اسکان:</InfoLabel>
-              <InfoValue>{passenger.place}</InfoValue>
-            </InfoBlock>
-            <InfoBlock>
-              <InfoLabel>وضعیت غذا:</InfoLabel>
-              <InfoValue>
-                {passenger.food === "allMeals" ? "سه وعده" : "بدون غذا"}
-              </InfoValue>
-            </InfoBlock>
-            <InfoBlock>
-              <InfoLabel>وضعیت پرداخت:</InfoLabel>
-              <InfoValue>
-                {passenger.payment === "Criticism" ? "نقد" : "اقساط"}
-              </InfoValue>
-            </InfoBlock> */}
           </PassengerCard>
         ))}
       </PassengerList>
