@@ -2,9 +2,10 @@
 // app/page.js
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
-import { FaTrash, FaPlus } from "react-icons/fa";
+import { FaTrash, FaPlus, FaEdit } from "react-icons/fa";
 import { useRouter } from "next/navigation"; // useRouter in App Router
-import Swal from 'sweetalert2';
+import Swal from "sweetalert2";
+import Link from "next/link";
 
 const TourList = styled.div`
   display: flex;
@@ -34,12 +35,12 @@ const Button = styled.button`
   &:hover {
     /* background-color: var(--lowBlue); */
     opacity: 70%;
-  };
-  transition: all .3s ease-in-out;
+  }
+  transition: all 0.3s ease-in-out;
 `;
 
 const AddTourButton = styled(Button)`
-  background-color: var(--blue);
+  background-color: var(--yellow);
   margin-bottom: 20px;
   display: flex;
   align-items: center;
@@ -47,11 +48,12 @@ const AddTourButton = styled(Button)`
 `;
 
 const TourPageLink = styled.a`
-  color:var(--green);
+  color: var(--green);
   cursor: pointer;
   text-decoration: none;
   font-size: 1.5rem;
   font-weight: 900;
+  user-select: none;
 `;
 
 const HomePage = () => {
@@ -68,38 +70,36 @@ const HomePage = () => {
     fetchTours();
   }, []);
 
-
-const handleDelete = async (id) => {
-  // نمایش پیام تایید
-  const result = await Swal.fire({
-    title: 'آیا مطمئن هستید؟',
-    text: 'این تور حذف خواهد شد!',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'بله، حذف کن!',
-    cancelButtonText: 'خیر، انصراف',
-  });
-
-  // اگر کاربر تایید کرد
-  if (result.isConfirmed) {
-    await fetch(`/api/tour/remove/${id}`, {
-      method: "DELETE",
+  const handleDelete = async (id) => {
+    // نمایش پیام تایید
+    const result = await Swal.fire({
+      title: "آیا مطمئن هستید؟",
+      text: "این تور حذف خواهد شد!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "بله، حذف کن!",
+      cancelButtonText: "خیر، انصراف",
     });
-    
-    // به‌روزرسانی وضعیت تورها پس از حذف
-    setTours(tours.filter((tour) => tour._id !== id));
-    
-    // نمایش پیام موفقیت
-    Swal.fire('حذف شد!', 'تور با موفقیت حذف شد.', 'success');
-  } else {
-    // اگر کاربر حذف رو لغو کرد، هیچ کاری نکن
-    return;
-  }
-};
 
+    // اگر کاربر تایید کرد
+    if (result.isConfirmed) {
+      await fetch(`/api/tour/remove/${id}`, {
+        method: "DELETE",
+      });
+
+      // به‌روزرسانی وضعیت تورها پس از حذف
+      setTours(tours.filter((tour) => tour._id !== id));
+
+      // نمایش پیام موفقیت
+      Swal.fire("حذف شد!", "تور با موفقیت حذف شد.", "success");
+    } else {
+      // اگر کاربر حذف رو لغو کرد، هیچ کاری نکن
+      return;
+    }
+  };
 
   return (
-    <div style={{padding:"3rem 1rem"}}>
+    <div style={{ padding: "3rem 1rem" }}>
       <AddTourButton onClick={() => router.push("/p-admin/add-tour")}>
         <FaPlus /> اضافه کردن تور جدید
       </AddTourButton>
@@ -116,9 +116,17 @@ const handleDelete = async (id) => {
               <p>{tour.date}</p>
               <p>{tour.price}</p>
             </div>
-            <Button onClick={() => handleDelete(tour._id)}>
-              <FaTrash />
-            </Button>
+            <div style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
+              <Link href={"p-admin/edit-tour/"+tour._id}>
+              <Button style={{backgroundColor:"var(--blue)"}}>
+                <FaEdit />
+              </Button>
+              </Link>
+
+              <Button onClick={() => handleDelete(tour._id)}>
+                <FaTrash />
+              </Button>
+            </div>
           </TourCard>
         ))}
       </TourList>

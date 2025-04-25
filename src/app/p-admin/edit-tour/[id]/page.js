@@ -1,7 +1,7 @@
 // app/add-tour/page.js
 "use client";
 
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { useRouter } from "next/navigation";
 import DatePicker from "react-multi-date-picker";
@@ -10,9 +10,8 @@ import persian_fa from "react-date-object/locales/persian_fa";
 
 const FormWrapper = styled.div`
   max-width: 600px;
-  margin: 0 auto;
+  margin: 3rem auto;
   padding: 20px;
-  margin-top: 3rem;
   background-color: #f9f9f9;
   border-radius: 8px;
   box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
@@ -45,19 +44,20 @@ const TextArea = styled.textarea`
 const Button = styled.button`
   width: 100%;
   padding: 10px;
-  background-color: #28a745;
+  background-color:var(--blue);
   color: white;
   border: none;
   border-radius: 5px;
   font-size: 16px;
   cursor: pointer;
   &:hover {
-    background-color: #218838;
+    background-color:var(--lowBlue);
   }
 `;
 
-const AddTourPage = () => {
+const EditTourPage = ({ params }) => {
   const router = useRouter();
+  const [tour, setTour] = useState([]);
   const [tourData, setTourData] = useState({
     name: "",
     date: "",
@@ -66,29 +66,29 @@ const AddTourPage = () => {
     image: null,
   });
 
+  const { id } = params;
+  useEffect(() => {
+    const getTour = async () => {
+      const res = await fetch(`/api/tour/${id}`);
+      const data = await res.json();
+      setTour(data.tour);
+    };
+    
+    getTour();
+  }, [id]);
+  
   const handleChange = (e) => {
     const { name, value } = e.target;
     setTourData({ ...tourData, [name]: value });
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    setTourData({ ...tourData, image: file });
-  };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const formData = new FormData();
-    formData.append("name", tourData.name);
-    formData.append("date", tourData.date);
-    formData.append("price", tourData.price);
-    formData.append("description", tourData.description);
-    formData.append("image", tourData.image);
 
     try {
-      const res = await fetch("/api/tour/create", {
-        method: "POST",
-        body: formData,
+      const res = await fetch(`/api/tour/edit/${id}`, {
+        method: "PUT",
+        body: JSON.stringify(tourData),
       });
       if (res.ok) {
         router.push("/p-admin");
@@ -103,33 +103,36 @@ const AddTourPage = () => {
 
   return (
     <FormWrapper>
-      <FormTitle>افزودن تور جدید</FormTitle>
+      <FormTitle>ویرایش :{tour.name}</FormTitle>
       <form onSubmit={handleSubmit}>
-        <p>عنوان تور</p>
+        <p>عنوان تور: {tour.name}</p>
         <Input
           type="text"
           name="name"
-          placeholder="نام تور"
+          placeholder="عنوان جدید را وارد کنید"
           value={tourData.name}
           onChange={handleChange}
           required
         />
-        <p>تاریخ سفر</p>
+        <p>تاریخ سفر: {tour.date}</p>
         <DatePicker
-        value={tourData.date}
+          value={tourData.date}
           onChange={(date) => {
-              setTourData({...tourData, date:`${date.year}/${date.month.number}/${date.day}`})
+            setTourData({
+              ...tourData,
+              date: `${date.year}/${date.month.number}/${date.day}`,
+            });
           }}
           calendar={persian}
           locale={persian_fa}
           calendarPosition="bottom-right"
         />
-        <p>هزینه تور</p>
+        <p>هزینه تور: {(tour.price)?.toLocaleString()} تومان</p>
         <Input
-         onWheel={(e) => e.target.blur()} 
+          onWheel={(e) => e.target.blur()}
           type="number"
           name="price"
-          placeholder="هزینه تور برای هر نفر"
+          placeholder="مبلغ هزینه جدید را وارد کنید"
           value={tourData.price}
           onChange={handleChange}
           required
@@ -137,23 +140,15 @@ const AddTourPage = () => {
         <p>توضیحات</p>
         <TextArea
           name="description"
-          placeholder="توضیحات"
+          placeholder={tour.description}
           value={tourData.description}
           onChange={handleChange}
           required
         />
-        <p>تصویر</p>
-        <Input
-          type="file"
-          name="image"
-          onChange={handleFileChange}
-          accept="image/*"
-          required
-        />
-        <Button type="submit">افزودن</Button>
+        <Button type="submit">تایید ویرایش</Button>
       </form>
     </FormWrapper>
   );
 };
 
-export default AddTourPage;
+export default EditTourPage;
