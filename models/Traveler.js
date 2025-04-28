@@ -1,12 +1,20 @@
 const { default: mongoose } = require("mongoose");
 require("./Tour");
+require("./Receipt");
 
 const schema = new mongoose.Schema({
-  tour: {
+  tours: [{
     type: mongoose.Schema.Types.ObjectId,
     ref: "Tour",
-    required: true,
-  },
+  }],
+  receipts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Receipt",
+  }],
+  carts: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Tour",
+  }],
   name: {
     type: String,
     required: true,
@@ -31,26 +39,7 @@ const schema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  // month: {
-  //   type: String,
-  //   required: true,
-  // },
-  // vehicule: {
-  //   type: String,
-  //   required: true,
-  // },
-  // place: {
-  //   type: String,
-  //   required: true,
-  // },
-  // food: {
-  //   type: String,
-  //   required: true,
-  // },
-  // payment: {
-  //   type: String,
-  //   required: true,
-  // },
+  
 });
 
 const model = mongoose.models.Traveler || mongoose.model("Traveler", schema);
