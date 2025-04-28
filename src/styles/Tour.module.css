@@ -1,12 +1,21 @@
-.tour{
-  padding: 5rem;
+.tour {
+  padding: 3rem;
+  min-height: 100vh;
+  color: #222;
 }
 
 .tour__container {
   display: flex;
   flex-direction: row-reverse;
-  margin-bottom: 5rem;
+  margin-bottom: 1rem;
   justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 2rem;
+  border-radius: 25px;
+  border: 2px solid;
+  border-image: linear-gradient(45deg, hsl(219.51, 77%, 60%), hsl(132.18, 76%, 59%)) ;
+  box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
 }
 
 .tourImg {
@@ -14,50 +23,120 @@
   object-fit: cover;
   height: auto;
   max-height: 350px;
-  border-radius: 10px;
+  border-radius: 20px;
+  box-shadow: 0 0 20px rgba(33, 150, 243, 0.5);
 }
+
 .discription {
   padding: 1rem 1rem 1rem 3rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
+
 .tourTitle {
   font-size: 2.5rem;
-  font-family: yekanFat;
+  font-family: yekanFat, sans-serif;
   margin-bottom: 1rem;
+  color: hsl(219.51, 77%, 60%);
+  text-shadow: 0 0 10px hsl(219.51, 77%, 60%);
+  position: relative;
 }
 
 .tourTitle:after {
   content: "";
-  height: 1px;
+  height: 2px;
   width: 100%;
   display: block;
-  background-color: var(--text-color);
+  background-color: hsl(132.18, 76%, 59%);
+  margin-top: 0.5rem;
 }
 
 .discTitle {
   font-size: 1.5rem;
-  font-family: yekanHeavy;
+  font-family: yekanHeavy, sans-serif;
   padding-right: 1rem;
+  color: hsl(132.18, 76%, 59%);
+  text-shadow: 0 0 8px hsl(132.18, 76%, 59%);
+  margin-bottom: 0.5rem;
 }
 
 .tourDisc {
   font-size: 1.25rem;
   padding-right: 2rem;
-  white-space: initial;
+  white-space: normal;
+  line-height: 1.6;
+  color: #555;
 }
 
-@media screen and (max-width: 900px) {
+.box{
+  position: relative;
+  display: inline-block;
+  padding: 1rem 2rem;
+  margin: 1rem;
+  margin-top: 0;
+  border-radius: 1.5rem;
+  background: #fff;
+  color: #222;
+  font-size: 1.2rem;
+  font-weight: 600;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+.box::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  border-radius: inherit;
+  background: linear-gradient(45deg, hsl(219.51, 77%, 60%), hsl(132.18, 76%, 59%));
+  z-index: -1;
+}
+.registerBtn {
+  display: inline-block;
+  padding: 0.8rem 2rem;
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #fff;
+  background: var(--blue);
+  border: none;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.registerBtn:hover {
+  transform: scale(1.05);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+}
+
+@media screen and (max-width: 850px) {
   .tour__container {
     flex-direction: column;
-    margin-bottom: 3rem;
+    margin-bottom: 1rem;
+    padding: 1.5rem;
   }
   .tourImg {
     width: 80% !important;
-    height: auto;
-    object-fit: cover;
+    max-height: 250px;
+    margin-bottom: 1.5rem;
+  }
+  .discription {
+    padding: 1rem;
+    text-align: center;
   }
   .tourDisc {
     font-size: 1rem;
     padding: 1rem;
-    width: 50%;
+    width: 100%;
+  }
+  .btnsContainer{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 }

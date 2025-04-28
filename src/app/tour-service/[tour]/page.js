@@ -4,6 +4,9 @@ import Image from "next/image";
 import Form from "@/components/templates/tour-service/tour/Form";
 import tourModel from "base/models/Tour";
 import connectToDB from "base/configs/db";
+import { FaCoins } from "react-icons/fa6";
+import { FaCalendarAlt } from "react-icons/fa";
+import { GiArchiveRegister } from "react-icons/gi";
 
 async function tour({ params }) {
   await connectToDB();
@@ -11,7 +14,7 @@ async function tour({ params }) {
   const tour = JSON.parse(
     JSON.stringify(await tourModel.findOne({ _id: tourId }))
   );
-
+  
   return (
     <div className={styles.tour}>
       <div className={styles.tour__container}>
@@ -30,23 +33,18 @@ async function tour({ params }) {
           </div>
         </div>
       </div>
-      <div>
-        <h4
-          style={{
-            color: "var(--blue)",
-            backgroundColor: "var(--gray)",
-            padding: ".5rem 1rem",
-            borderRadius: "1rem",
-            border: "1px var(--blue) solid",
-            display:"inline-block",
-            margin:"0 1rem 1rem 1rem"
-          }}
-          className={styles.discTitle}
-        >
-          شروع قیمت از : {tour.price.toLocaleString()} تومان
+      <div className={styles.btnsContainer}>
+        <h4 className={styles.box}>
+           <FaCoins />    شروع قیمت از : {tour.price.toLocaleString()} تومان
         </h4>
+        <h4 className={styles.box}>
+        <FaCalendarAlt />  تاریخ سفر: {tour.date}
+        </h4>
+        <button className={styles.registerBtn}>
+        <GiArchiveRegister />  ثبت نام
+        </button>
       </div>
-      <Form tour={tour._id} />
+      
     </div>
   );
 }
