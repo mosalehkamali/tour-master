@@ -12,3 +12,44 @@
     font-weight: 500;
     padding-right: 1rem;
 }
+
+@media (max-width: 900px) {
+    .header {
+      padding: 0 2rem;
+    }
+  
+    .title {
+      font-size: 2.5rem;
+    }
+  
+    .disc {
+      font-size: 1.1rem;
+    }
+  }
+  
+  @media (max-width: 600px) {
+    .header {
+      padding: 0 1.5rem;
+    }
+  
+    .title {
+      font-size: 2rem;
+      text-align: center; /* در موبایل عنوان وسط چین شود قشنگ‌تره */
+    }
+  
+    .disc {
+      font-size: 1rem;
+      text-align: center; /* توضیح هم وسط چین شود */
+      padding-right: 0;
+    }
+  }
+  
+  @media (max-width: 400px) {
+    .title {
+      font-size: 1.7rem;
+    }
+  
+    .disc {
+      font-size: 0.95rem;
+    }
+  }

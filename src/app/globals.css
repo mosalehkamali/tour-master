@@ -65,9 +65,27 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0; 
 }
 
+/* ریسپانسیو کردن بهتر برای موبایل و تبلت */
 @media screen and (max-width: 900px) {
-  html,
-  body {
+  html, body {
     padding: 0;
+    background-size: auto;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  html, body {
+    font-size: 14px; /* متن کمی کوچکتر شود */
+    background-size: auto 100%;
+  }
+
+  ::placeholder {
+    font-size: 0.9rem;
+  }
+}
+
+@media screen and (max-width: 400px) {
+  html, body {
+    font-size: 13px;
   }
 }

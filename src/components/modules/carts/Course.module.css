@@ -1,6 +1,7 @@
 .courseCard {
   position: relative;
   height: 380px;
+  width: 25vw;
   background-color: var(--gray);
   border-radius: 0.5rem;
   padding: 8rem 1rem 0 1rem;
@@ -120,4 +121,59 @@
 
 .courseInfoBtn:hover {
   color: var(--lowBlue);
+}
+
+@media (max-width: 768px) {
+  .courseCard {
+    width: 90vw; /* عرض کارت روی موبایل بزرگ‌تر شود */
+    height: auto; /* ارتفاع باز شود نسبت به محتوا */
+    padding: 6rem 1rem 1rem 1rem; /* فاصله ها مناسب تر بشوند */
+  }
+
+  .cardImg {
+    top: -2rem; /* تصویر کمی نزدیک‌تر به کارت */
+    padding: 0 0.5rem;
+  }
+
+  .courseImg {
+    height: 8rem; /* ارتفاع عکس کوچکتر شود */
+  }
+
+  .courseTitle {
+    font-size: 1.25rem; /* عنوان کمی کوچکتر */
+    line-height: 1.5rem;
+  }
+
+  .courseDisc {
+    -webkit-line-clamp: 3; /* توضیحات کوتاه‌تر روی موبایل */
+    line-clamp: 3;
+  }
+
+  .coursePrice {
+    font-size: 1.4rem; /* قیمت هم یکم کوچکتر */
+  }
+}
+
+@media (max-width: 480px) {
+  .courseCard {
+    width: 95vw; /* در موبایل های خیلی کوچک، کارت تقریباً کل صفحه را بگیرد */
+    padding: 5rem 0.8rem 0.8rem 0.8rem;
+  }
+
+  .courseImg {
+    height: 7rem; /* عکس باز هم کوچکتر */
+  }
+
+  .courseTitle {
+    font-size: 1.1rem;
+  }
+
+  .courseDisc {
+    -webkit-line-clamp: 2; /* فقط ۲ خط توضیح برای موبایل خیلی کوچک */
+    line-clamp: 2;
+  }
+
+  .coursePrice {
+    font-size: 1.2rem;
+  }
 }
