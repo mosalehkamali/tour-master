@@ -1,6 +1,10 @@
 const { default: mongoose } = require("mongoose");
 require('./Traveler')
 const schema = new mongoose.Schema({
+  travelers: [{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "Traveler",
+  }],
   name: {
     type: String,
     required: true,
@@ -23,11 +27,7 @@ const schema = new mongoose.Schema({
   },
 });
 
-schema.virtual("travelers",{
-    ref:"Traveler",
-    localField:"_id",
-    foreignField:"tour"
-})
+
 
 const model = mongoose.models.Tour || mongoose.model("Tour", schema);
 
