@@ -4,18 +4,18 @@ import Link from "next/link";
 import { FaUser } from "react-icons/fa";
 import { RiShoppingCartLine } from "react-icons/ri";
 
-const Header = () => {
+const Header = ({toggleModal}) => {
   // حالت استاتیک برای شبیه‌سازی وضعیت احراز هویت
-  const isAuthenticated = true; // تغییر به false برای شبیه‌سازی عدم ورود کاربر
+  const isAuthenticated = false; // تغییر به false برای شبیه‌سازی عدم ورود کاربر
   const user = { name: "محمد صالح کمالی" }; // تنها نام کاربر
   const cartCount = 3; // تعداد آیتم‌های سبد خرید
 
   return (
-    <header className="header">
+      <header className="header">
       <div className="container">
         <nav className="nav">
           {isAuthenticated ? (
-            <div className="auth-info">
+              <div className="auth-info">
               <div className="user">
                 <FaUser className="user-icon" size={20} />
                 <span className="user-name">{user.name}</span>
@@ -24,22 +24,26 @@ const Header = () => {
                 <p className="cart-button">
                   <RiShoppingCartLine size={24} />
                   {cartCount > 0 && (
-                    <span className="cart-count">{cartCount}</span>
-                  )}
+                      <span className="cart-count">{cartCount}</span>
+                    )}
                 </p>
               </Link>
             </div>
           ) : (
-            <div className="auth-buttons">
-              <Link href="/auth">
+              <div className="auth-buttons">
+              <div  onClick={toggleModal}>
                 <p className="btn">ورود / ثبت نام</p>
-              </Link>
+              </div>
             </div>
           )}
         </nav>
       </div>
 
       <style jsx>{`
+        .auth-buttons{
+            cursor: pointer;
+            user-select: none;
+        }
         .header {
           position: fixed;
           top: 0;
