@@ -38,11 +38,12 @@ const Header = ({ toggleModal }) => {
         <nav className="nav">
           {isAuthenticated ? (
             <div className="auth-info">
-              <div className="user">
+              <Link href={`/passenger-dashboard/${user._id}`} style={{display:"flex",color:"#000",marginRight:"1rem",gap:".5rem"
+              }} className="user">
                 <FaUser className="user-icon" size={20} />
                 <span className="user-name">{user.name}</span>
-              </div>
-              <Link href="/cart">
+              </Link>
+              <Link href={`/passenger-dashboard/${user._id}`}>
                 <p className="cart-button">
                   <RiShoppingCartLine size={24} />
                   {cartCount > 0 && (
@@ -75,7 +76,7 @@ const Header = ({ toggleModal }) => {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          z-index: 1000;
+          z-index: 999;
           backdrop-filter: blur(10px); /* تاری پس‌زمینه برای جلوه زیباتر */
           transition: background-color 0.3s ease;
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
@@ -97,13 +98,6 @@ const Header = ({ toggleModal }) => {
           align-items: center;
           justify-content: space-between;
           gap: 80vw;
-        }
-        .user {
-          width: 100%;
-          display: flex;
-          align-items: center;
-          justify-content: space-between;
-          margin-right: 1rem;
         }
         .user-icon {
           margin-right: 0.5rem;

@@ -1,19 +1,32 @@
+
 import connectToDB from "base/configs/db";
-import travelerModel from "base/models/Traveler";
-import tourModel from "base/models/Tour";
+import tourModel from "base/models/Tour"; // مدل تور
+import travelerModel from "base/models/Traveler"; // مدل مسافر
 
 export async function GET(request, { params }) {
-  const { id } = params;
+  try {
+    await connectToDB();
+    const { id } = params;
+    const tourId = id;
+    if (!tourId) {
+      return Response.json({ error: "Tour ID is required." }, { status: 400 });
+    }
 
-  await connectToDB();
-  
-    const tour = await tourModel.findOne({ _id : id });
-    const passengers = await travelerModel.find({ tour: id },"-__v -_id -tour");
-    
-      const response = {
-            tour,
-            passengers,
-          };
+    const tour = await tourModel
+      .findById(tourId)
+      .populate({
+        path: "travelers",
+        model: travelerModel,
+      })
+      .lean();
 
-  return new Response(JSON.stringify(response), { status: 200 });
+    if (!tour) {
+      return Response.json({ error: "Tour not found." }, { status: 404 });
+    }
+
+    return Response.json({ tour }, { status: 200 });
+  } catch (err) {
+    console.error(err);
+    return Response.json({ error: "Internal Server Error." }, { status: 500 });
+  }
 }
