@@ -1,21 +1,43 @@
 "use client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa";
 import { RiShoppingCartLine } from "react-icons/ri";
 
-const Header = ({toggleModal}) => {
-  // حالت استاتیک برای شبیه‌سازی وضعیت احراز هویت
-  const isAuthenticated = false; // تغییر به false برای شبیه‌سازی عدم ورود کاربر
-  const user = { name: "محمد صالح کمالی" }; // تنها نام کاربر
-  const cartCount = 3; // تعداد آیتم‌های سبد خرید
+const Header = ({ toggleModal }) => {
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [user, setUser] = useState({});
+  const [cartCount, setCartCount] = useState(0);
+
+  useEffect(() => {
+    async function getCookie() {
+      // کوکی‌ها رو از document.cookie می‌خونیم
+      const cookies = document.cookie.split("; ");
+
+      for (let cookie of cookies) {
+        const [cookieName, cookieValue] = cookie.split("=");
+
+        if (cookieName === "user") {
+          setIsAuthenticated(cookieValue);
+          const res = await fetch("/api/travelers/getme");
+          const data = await res.json();
+          setUser(data);
+          setCartCount(data.carts.length);
+          
+        } else {
+          setIsAuthenticated(false);
+        }
+      }
+    }
+    getCookie();
+  }, []);
 
   return (
-      <header className="header">
+    <header className="header">
       <div className="container">
         <nav className="nav">
           {isAuthenticated ? (
-              <div className="auth-info">
+            <div className="auth-info">
               <div className="user">
                 <FaUser className="user-icon" size={20} />
                 <span className="user-name">{user.name}</span>
@@ -24,14 +46,14 @@ const Header = ({toggleModal}) => {
                 <p className="cart-button">
                   <RiShoppingCartLine size={24} />
                   {cartCount > 0 && (
-                      <span className="cart-count">{cartCount}</span>
-                    )}
+                    <span className="cart-count">{cartCount}</span>
+                  )}
                 </p>
               </Link>
             </div>
           ) : (
-              <div className="auth-buttons">
-              <div  onClick={toggleModal}>
+            <div className="auth-buttons">
+              <div onClick={toggleModal}>
                 <p className="btn">ورود / ثبت نام</p>
               </div>
             </div>
@@ -40,9 +62,9 @@ const Header = ({toggleModal}) => {
       </div>
 
       <style jsx>{`
-        .auth-buttons{
-            cursor: pointer;
-            user-select: none;
+        .auth-buttons {
+          cursor: pointer;
+          user-select: none;
         }
         .header {
           position: fixed;
@@ -59,7 +81,7 @@ const Header = ({toggleModal}) => {
           box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
         }
         .container {
-            width: 100%;
+          width: 100%;
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -69,15 +91,15 @@ const Header = ({toggleModal}) => {
           display: flex;
           align-items: center;
         }
-        .auth-info{
-            width: 100%;
+        .auth-info {
+          width: 100%;
           display: flex;
           align-items: center;
           justify-content: space-between;
           gap: 80vw;
         }
         .user {
-            width: 100%;
+          width: 100%;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -104,8 +126,8 @@ const Header = ({toggleModal}) => {
           text-decoration: none;
           transition: background-color 0.3s ease;
         }
-        .cart-button:hover{
-            background: var(--green);
+        .cart-button:hover {
+          background: var(--green);
         }
         .cart-count {
           position: absolute;
@@ -143,8 +165,8 @@ const Header = ({toggleModal}) => {
           .btn {
             margin: 0.5rem;
           }
-          .auth-info{
-            gap: 3rem
+          .auth-info {
+            gap: 3rem;
           }
         }
       `}</style>

@@ -7,7 +7,7 @@ import persian_fa from "react-date-object/locales/persian_fa";
 const AuthModal = ({ toggleModal }) => {
 
   const [step, setStep] = useState(1);
-  const [nationalID, setNationalID] = useState("");
+  const [personalId, setpersonalId] = useState("");
   const [loading, setLoading] = useState(false);
 
   const {
@@ -18,8 +18,8 @@ const AuthModal = ({ toggleModal }) => {
   } = useForm();
 
   // بررسی اعتبار کد ملی (شبیه‌سازی شده)
-  const handleNationalIDConfirm = async () => {
-    if (!nationalID.trim()) {
+  const handlepersonalIdConfirm = async () => {
+    if (!personalId.trim()) {
       Swal.fire({
         icon: "error",
         title: "خطا",
@@ -28,36 +28,57 @@ const AuthModal = ({ toggleModal }) => {
       return;
     }
     setLoading(true);
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    setLoading(false);
-    // شبیه‌سازی وجود کاربر: اگر کد ملی "1234567890" باشد، کاربر موجود است
-    if (nationalID === "1234567890") {
-      Swal.fire({
-        icon: "info",
-        title: "کاربر موجود است",
-        text: "این کد ملی قبلاً ثبت شده است. صفحه رفرش می‌شود.",
-      }).then(() => {
-        window.location.reload();
+    try {
+      const response = await fetch(`${window.location.origin}/api/travelers/login`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ personalId }),
       });
-    } else {
-      setStep(2);
+  
+      const data = await response.json();
+  
+      if (response.ok) {
+        Swal.fire({
+          icon: "success",
+          title: "با موفقیت وارد شدید",
+          text: "صفحه رفرش می‌شود.",
+        }).then(() => {
+          window.location.reload();
+        });
+      } else {
+        setStep(2);
+      }
+    } catch (error) {
+      console.error('Login error:', error.message);
+      return { success: false, error: error.message };
     }
-  };
+    setLoading(false);
+    };
 
   // ارسال فرم ساخت حساب
   const onSubmit = async (data) => {
     setLoading(true);
     data.birthDate = data.birthDate.year+"/"+data.birthDate.month+"/"+data.birthDate.day
-    // await new Promise((resolve) => setTimeout(resolve, 1500));
-    // setLoading(false);
-    // Swal.fire({
-    //   icon: "success",
-    //   title: "ثبت نام موفق",
-    //   text: "حساب کاربری شما با موفقیت ایجاد شد.",
-    // }).then(() => {
-    //   window.location.reload();
-    // });
-    console.log(data);
+    data = {...data,personalId}
+    
+    const res = await fetch(`${window.location.origin}/api/travelers/signin`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(data),
+        });
+        if (res.status === 201) {
+          Swal.fire({
+            icon: "success",
+            title: "ثبت نام موفق",
+            text: "حساب کاربری شما با موفقیت ایجاد شد.",
+          }).then(() => {
+            window.location.reload();
+          });
+        }
     
   };
 
@@ -74,13 +95,13 @@ const AuthModal = ({ toggleModal }) => {
                   <label>کد ملی:</label>
                   <input
                     type="text"
-                    value={nationalID}
-                    onChange={(e) => setNationalID(e.target.value)}
+                    value={personalId}
+                    onChange={(e) => setpersonalId(e.target.value)}
                     placeholder="کد ملی"
                     className="input-field"
                   />
                 </div>
-                <button onClick={handleNationalIDConfirm}>تایید</button>
+                <button onClick={handlepersonalIdConfirm}>تایید</button>
               </>
             )}
             {step === 2 && (
@@ -91,7 +112,7 @@ const AuthModal = ({ toggleModal }) => {
                   <label>کد ملی:</label>
                   <input
                     type="text"
-                    value={nationalID}
+                    value={personalId}
                     disabled
                     className="input-field"
                   />
@@ -102,13 +123,13 @@ const AuthModal = ({ toggleModal }) => {
                     <input
                       type="text"
                       placeholder="نام و نام خانوادگی"
-                      {...register("fullName", {
+                      {...register("name", {
                         required: "نام و نام خانوادگی الزامی است.",
                       })}
                       className="input-field"
                       />
-                    {errors.fullName && (
-                      <p className="error">{errors.fullName.message}</p>
+                    {errors.name && (
+                      <p className="error">{errors.name.message}</p>
                     )}
                   </div>
                   <div className="form-group">
