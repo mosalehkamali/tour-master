@@ -43,7 +43,7 @@ const Header = ({ toggleModal }) => {
                 <FaUser className="user-icon" size={20} />
                 <span className="user-name">{user.name}</span>
               </Link>
-              <Link href={`/passenger-dashboard/${user._id}`}>
+              <Link href={`/passenger-dashboard/${user._id}/basket`}>
                 <p className="cart-button">
                   <RiShoppingCartLine size={24} />
                   {cartCount > 0 && (

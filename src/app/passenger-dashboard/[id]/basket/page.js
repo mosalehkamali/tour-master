@@ -1,0 +1,226 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Swal from "sweetalert2";
+
+export default function CartPage({ params }) {
+  const [cartTours, setCartTours] = useState([]);
+  const { id } = params;
+  useEffect(() => {
+    // دریافت لیست تورهای سبد خرید کاربر از API
+    async function fetchCart() {
+      try {
+        const res = await fetch(`/api/travelers/basket/${id}`);
+        const data = await res.json();
+        console.log(data);
+
+        if (!res.ok) {
+          throw new Error(data.error || "خطا در دریافت سبد خرید");
+        }
+
+        setCartTours(data.tours); // فرض: آرایه‌ای از تورها
+      } catch (err) {
+        Swal.fire({
+          icon: "error",
+          title: "خطا!",
+          text: err.message,
+        });
+      }
+    }
+
+    fetchCart();
+  }, []);
+
+  const handlePay = async (tourId) => {
+    try {
+      const res = await fetch(`/api/pay`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tourId }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "پرداخت انجام نشد");
+      }
+
+      Swal.fire({
+        icon: "success",
+        title: "پرداخت موفق!",
+        text: "پرداخت با موفقیت برای این تور ثبت شد.",
+      });
+
+      // Refresh cart or mark tour as paid
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "خطا در پرداخت",
+        text: err.message,
+      });
+    }
+  };
+
+  const handleRemove = (tourId) => {
+    setCartTours(cartTours.filter((tour) => tour.id !== tourId));
+  };
+
+  const handlePayment = (tour) => {
+    alert(`پرداخت برای تور ${tour.name} انجام شد!`);
+    setCartTours(cartTours.filter((t) => t.id !== tour.id));
+  };
+
+  return (
+    <div className="cart-page">
+      <h1>سبد خرید</h1>
+      {cartTours.length === 0 ? (
+        <p>سبد خرید شما خالی است.</p>
+      ) : (
+        <div className="cart-items">
+          {cartTours.map((tour) => (
+            <div key={tour.id} className="cart-item">
+              <div className="item-image">
+                <img src={tour.image} alt={tour.name} />
+              </div>
+              <div className="item-details">
+                <h2 className="item-name">{tour.name}</h2>
+                <p className="item-description">{tour.description}</p>
+                <p className="item-price">
+                  {tour.price.toLocaleString()} تومان
+                </p>
+                <div className="button-container">
+                  <button
+                    className="remove-btn"
+                    onClick={() => handleRemove(tour.id)}
+                  >
+                    حذف از سبد خرید
+                  </button>
+                  <button
+                    className="payment-btn"
+                    onClick={() => handlePayment(tour)}
+                  >
+                    پرداخت
+                  </button>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
+      )}
+
+      <style jsx>{`
+        .cart-page {
+          max-width: 1200px;
+          margin: 0 auto;
+          padding: 1rem;
+          direction: rtl;
+        }
+        h1 {
+          text-align: center;
+          color: hsl(219, 77%, 60%);
+          margin-bottom: 1.5rem;
+        }
+        .cart-items {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .cart-item {
+          display: flex;
+          align-items: center;
+          background: #fff;
+          border-radius: 10px;
+          box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+          padding: 1rem;
+        }
+        .item-image {
+          flex: 0 0 150px;
+          margin-left: 1rem;
+        }
+        .item-image img {
+          width: 150px;
+          height: 100px;
+          object-fit: cover;
+          border-radius: 10px;
+        }
+        .item-details {
+          flex: 1;
+          display: flex;
+          flex-direction: column;
+          gap: 0.5rem;
+        }
+        .item-name {
+          font-size: 1.3rem;
+          font-weight: bold;
+          color: #333;
+        }
+        .item-description {
+          font-size: 1rem;
+          color: #666;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          display: -webkit-box;
+          -webkit-line-clamp: 1;
+          line-clamp: 1;
+          -webkit-box-orient: vertical;
+        }
+        .item-price {
+          font-size: 1.1rem;
+          font-weight: 600;
+          color: #000;
+        }
+        .button-container {
+          display: flex;
+          gap: 0.5rem;
+        }
+        .remove-btn,
+        .payment-btn {
+          flex: 1;
+          padding: 0.5rem;
+          border: none;
+          border-radius: 20px;
+          cursor: pointer;
+          font-size: 1rem;
+          transition: background 0.3s;
+        }
+        .remove-btn {
+          background: #e74c3c;
+          color: #fff;
+        }
+        .remove-btn:hover {
+          background: #c0392b;
+        }
+        .payment-btn {
+          background: linear-gradient(
+            45deg,
+            hsl(219, 77%, 60%),
+            hsl(132, 76%, 59%)
+          );
+          color: #fff;
+        }
+        .payment-btn:hover {
+          background: linear-gradient(
+            45deg,
+            hsl(132, 76%, 59%),
+            hsl(219, 77%, 60%)
+          );
+        }
+        @media (max-width: 768px) {
+          .cart-item {
+            flex-direction: column;
+            text-align: center;
+          }
+          .item-image {
+            margin-bottom: 1rem;
+          }
+          .item-details {
+            align-items: center;
+          }
+          .button-container {
+            flex-direction: column;
+          }
+        }
+      `}</style>
+    </div>
+  );
+}

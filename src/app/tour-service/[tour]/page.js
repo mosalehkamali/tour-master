@@ -109,7 +109,7 @@ function tour({ params }) {
         router.refresh();
       } else if (result.dismiss === Swal.DismissReason.cancel) {
         // 📦 ریدایرکت به صفحه سبد خرید
-        router.push(`/passenger-dashboard/${user}`);
+        router.push(`/passenger-dashboard/${user}/basket`);
       }
     });
   
