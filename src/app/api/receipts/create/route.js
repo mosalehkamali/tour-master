@@ -3,7 +3,7 @@ import path from "path";
 import connectToDB from "base/configs/db";
 import Receipt from "base/models/Receipt";
 import { NextResponse } from "next/server";
-import travelerModel from 'base/models/Traveler';
+import travelerModel from "base/models/Traveler";
 
 export async function POST(req) {
   try {
@@ -13,13 +13,16 @@ export async function POST(req) {
 
     const tour = formData.get("tour");
     const traveler = formData.get("traveler");
-    const amount = Number(formData.get("amount")|| 0);
+    const amount = Number(formData.get("amount") || 0);
     const status = formData.get("status") || "paid";
     const description = formData.get("description") || "";
     const file = formData.get("image");
 
     if (!file || !file.name || !file.stream) {
-      return NextResponse.json({ error: "تصویر ارسال نشده است." }, { status: 400 });
+      return NextResponse.json(
+        { error: "تصویر ارسال نشده است." },
+        { status: 400 }
+      );
     }
 
     // مرحله 1: ایجاد رسید اولیه بدون عکس
@@ -46,23 +49,25 @@ export async function POST(req) {
     tempReceipt.image = imageUrl;
     await tempReceipt.save();
 
+    const user = await travelerModel.findById(traveler);
 
-      const user = await travelerModel.findById(traveler);
-        
-        if (!user) {
-            return NextResponse.json(
-                { error: 'مسافر مورد نظر یافت نشد.' },
-                { status: 404 }
-            );
-        }
-        
-        // حذف تور از سبد خرید
-        user.carts = user.carts.filter(
-            (id) => id.toString() !== tour
-        );
-    
-        await user.save();
+    if (!user) {
+      return NextResponse.json(
+        { error: "مسافر مورد نظر یافت نشد." },
+        { status: 404 }
+      );
+    }
 
+    const receiptId = tempReceipt._id;
+
+    if (!user.receipts.some((id) => id.toString() === receiptId.toString())) {
+      user.receipts.push(receiptId);
+    }
+
+    // حذف تور از سبد خرید
+    user.carts = user.carts.filter((id) => id.toString() !== tour);
+
+    await user.save();
 
     return NextResponse.json(
       { message: "رسید با موفقیت ایجاد شد", receipt: tempReceipt },

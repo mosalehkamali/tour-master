@@ -3,8 +3,8 @@ import { FaRegCopy } from "react-icons/fa";
 import Swal from "sweetalert2";
 
 const BankCard = () => {
-  const cardNumber = "6037 8012 3456 7890"; // شماره کارت نمونه
-  const cardHolder = "محمدصالح کمالی"; // نام صاحب کارت
+  const cardNumber = "6063 7310 7706 3684"; // شماره کارت نمونه
+  const cardHolder = "محمد متوسلیان"; // نام صاحب کارت
   
   const handleCopy = () => {
     navigator.clipboard.writeText(cardNumber)
@@ -30,7 +30,7 @@ const BankCard = () => {
   return (
     <div className="bank-card"onClick={handleCopy}>
       <div className="card-header">
-        <span className="bank-name">بانک ملی ایران</span>
+        <span className="bank-name">بانک قرض الحسنه مهر ایران</span>
       </div>
       <div className="card-number-wrapper">
         <FaRegCopy className="copy-icon" />

@@ -5,6 +5,7 @@ import fs from "fs";
 import path from "path";
 import connectToDB from "base/configs/db";
 import Receipt from "base/models/Receipt";
+import User from "base/models/Traveler";
 import mongoose from "mongoose";
 
 export async function DELETE(req, { params }) {
@@ -34,6 +35,11 @@ export async function DELETE(req, { params }) {
       fs.unlinkSync(receiptPath);
     }
 
+    const user = await User.findById(receipt.traveler)
+    
+    user.receipts = user.receipts.filter((id) => id.toString() !== (receipt._id).toString());
+    await user.save();
+    
     // حذف رسید از دیتابیس
     await Receipt.findByIdAndDelete(id);
 

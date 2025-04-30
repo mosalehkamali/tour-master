@@ -4,12 +4,12 @@ import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
 const ReceiptDetailPage = ({ params }) => {
-const router = useRouter()    
-    const receiptId = params.receiptId;
+  const router = useRouter();
+  const receiptId = params.receiptId;
   const [receiptData, setreceiptData] = useState({});
 
   useEffect(() => {
-   const fetchReceiptDetails = async (receiptId) => {
+    const fetchReceiptDetails = async (receiptId) => {
       try {
         const res = await fetch(`/api/receipts/${receiptId}`);
 
@@ -26,9 +26,8 @@ const router = useRouter()
         return null;
       }
     };
-    fetchReceiptDetails(receiptId)
-    
-}, []);
+    fetchReceiptDetails(receiptId);
+  }, []);
 
   const [confirmedAmount, setConfirmedAmount] = useState();
   const [notes, setNotes] = useState(""); // توضیحات اضافه برای رسید
@@ -36,14 +35,49 @@ const router = useRouter()
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
 
   // تایید رسید (شبیه‌سازی شده)
-  const handleConfirm = (e) => {
-    e.preventDefault();
+  const handleConfirm = async () => {
+    const updatedData = {
+      _id: receiptData._id,
+      tour: receiptData.tour._id,
+      traveler: receiptData.traveler._id,
+      amount: confirmedAmount,
+      image: receiptData.image,
+      status: "confirmed",
+      decription: notes,
+    };
     setLoading(true);
-    setTimeout(() => {
+    try {
+      const res = await fetch(`/api/receipts/update/${receiptId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(updatedData),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok) {
+        throw new Error(result.error || "خطا در به‌روزرسانی رسید");
+      }
       setLoading(false);
-      alert("رسید تایید شد!\n" + "توضیحات: " + notes);
-      // در اینجا می‌توانید عملیات بعد از تایید (مثلاً به‌روزرسانی در دیتابیس) را انجام دهید.
-    }, 2000);
+      Swal.fire({
+        icon: "success",
+        title: "موفقیت‌آمیز",
+        text: result.message,
+        confirmButtonText: "باشه",
+      });
+      router.replace("/p-admin/receipts");
+      
+      return result;
+    } catch (err) {
+      Swal.fire({
+        icon: "error",
+        title: "خطا",
+        text: err.message || "مشکلی در به‌روزرسانی رسید پیش آمد.",
+        confirmButtonText: "تلاش دوباره",
+      });
+    }
   };
 
   // باز کردن مودال برای نمای کامل تصویر
@@ -57,45 +91,45 @@ const router = useRouter()
   };
 
   // حذف رسید (شبیه‌سازی شده)
-  const handleDelete = async() => {
+  const handleDelete = async () => {
     const result = await Swal.fire({
-        title: "آیا مطمئنی؟",
-        text: "این رسید برای همیشه حذف خواهد شد!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "بله، حذف کن",
-        cancelButtonText: "نه، بی‌خیال",
-      });
-  
-      if (result.isConfirmed) {
-        try {
-          const res = await fetch(`/api/receipts/delete/${receiptId}`, {
-            method: "DELETE",
-          });
-  
-          const data = await res.json();
-  
-          if (!res.ok) {
-            throw new Error(data.error || "خطا در حذف رسید");
-          }
-  
-          await Swal.fire({
-            title: "حذف شد!",
-            text: "رسید با موفقیت حذف شد.",
-            icon: "success",
-            confirmButtonText: "باشه",
-          });
-  
-          router.back(); // رفرش صفحه با useRouter
-        } catch (error) {
-          Swal.fire({
-            title: "خطا!",
-            text: error.message,
-            icon: "error",
-            confirmButtonText: "باشه",
-          });
+      title: "آیا مطمئنی؟",
+      text: "این رسید برای همیشه حذف خواهد شد!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "بله، حذف کن",
+      cancelButtonText: "نه، بی‌خیال",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const res = await fetch(`/api/receipts/delete/${receiptId}`, {
+          method: "DELETE",
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+          throw new Error(data.error || "خطا در حذف رسید");
         }
+
+        await Swal.fire({
+          title: "حذف شد!",
+          text: "رسید با موفقیت حذف شد.",
+          icon: "success",
+          confirmButtonText: "باشه",
+        });
+
+        router.replace("/p-admin/receipts"); // رفرش صفحه با useRouter
+      } catch (error) {
+        Swal.fire({
+          title: "خطا!",
+          text: error.message,
+          icon: "error",
+          confirmButtonText: "باشه",
+        });
       }
+    }
   };
 
   return (
@@ -107,17 +141,19 @@ const router = useRouter()
             <strong>تور:</strong> {receiptData.tour?.name}
           </p>
           <p>
-            <strong>قیمت تور:</strong> {receiptData.tour?.price.toLocaleString()}
+            <strong>قیمت تور:</strong>{" "}
+            {receiptData.tour?.price.toLocaleString()}
           </p>
           <p>
             <strong>پرداخت‌کننده:</strong> {receiptData.traveler?.name}
           </p>
           <p>
-            <strong>مبلغ تایید شده:</strong> {receiptData.amount?.toLocaleString()}{" "}
-            تومان
+            <strong>مبلغ تایید شده:</strong>{" "}
+            {receiptData.amount?.toLocaleString()} تومان
           </p>
           <p>
-            <strong>وضعیت:</strong> {receiptData?.status==="paid"?"در انتظار تایید":"تایید شده"}
+            <strong>وضعیت:</strong>{" "}
+            {receiptData?.status === "paid" ? "در انتظار تایید" : "تایید شده"}
           </p>
         </div>
         <div className="receipt-image" onClick={handleImageClick}>
@@ -139,7 +175,7 @@ const router = useRouter()
           placeholder="توضیحات اضافی برای مسافر..."
           rows="1"
         />
-        <button type="submit" disabled={loading}>
+        <button onClick={handleConfirm} type="submit" disabled={loading}>
           {loading ? "در حال تایید..." : "تایید رسید"}
         </button>
       </form>

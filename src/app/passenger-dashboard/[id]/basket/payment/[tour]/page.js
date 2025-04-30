@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import BankCard from "@/components/modules/carts/BankCart"; // فرض کنید کامپوننت BankCard از قبل ساخته شده است
 import { useParams, useRouter } from "next/navigation";
 import Swal from "sweetalert2";
@@ -11,12 +11,32 @@ const PaymentPage = () => {
   const tour = params.tour;
 
   // داده‌های تور جهت پرداخت (بدون توضیحات)
-  const tourInfo = {
-    id: 1,
-    name: "تور شیراز",
-    price: 1800000,
-    date: "1402/05/12",
-  };
+  const [tourInfo,setTourInfo] =useState({}) 
+ 
+  useEffect(()=>{
+  async function fetchTourInfo() {
+    try {
+      const res = await fetch(`/api/tour/${tour}`);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'خطا در دریافت اطلاعات تور');
+      }
+      setTourInfo(data.tour)
+    } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: 'خطا!',
+        text: err.message,
+      });
+    } 
+  }
+
+  if (tour) {
+    fetchTourInfo();
+  }
+
+ },[tour])
 
   // مدیریت فایل رسید پرداخت
   const [receipt, setReceipt] = useState(null);
@@ -82,7 +102,7 @@ const PaymentPage = () => {
             <strong>تاریخ تور:</strong> {tourInfo.date}
           </p>
           <p className="tour-price">
-            <strong>قیمت:</strong> {tourInfo.price.toLocaleString()} تومان
+            <strong>قیمت:</strong> {tourInfo.price?.toLocaleString()} تومان
           </p>
         </div>
 
