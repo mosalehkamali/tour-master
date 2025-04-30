@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import Link from "next/link";
 
 export default function CartPage({ params }) {
   const router = useRouter();
@@ -33,38 +34,7 @@ export default function CartPage({ params }) {
     fetchCart();
   }, []);
 
-  const handlePay = async (tourId) => {
-    try {
-      const res = await fetch(`/api/pay`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ tourId }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "پرداخت انجام نشد");
-      }
-
-      Swal.fire({
-        icon: "success",
-        title: "پرداخت موفق!",
-        text: "پرداخت با موفقیت برای این تور ثبت شد.",
-      });
-
-      // Refresh cart or mark tour as paid
-    } catch (err) {
-      Swal.fire({
-        icon: "error",
-        title: "خطا در پرداخت",
-        text: err.message,
-      });
-    }
-  };
-
   const handleRemove = async (tourId) => {
-    
     const result = await Swal.fire({
       title: "آیا مطمئنی؟",
       text: "این تور از سبد خریدت حذف می‌شود!",
@@ -138,12 +108,14 @@ export default function CartPage({ params }) {
                   >
                     حذف از سبد خرید
                   </button>
-                  <button
-                    className="payment-btn"
-                    onClick={() => handlePayment(tour)}
+                  <button className="payment-btn">
+                  <Link
+                  style={{color:"#fff",width:"100%"}}
+                    href={`/passenger-dashboard/${id}/basket/payment/${tour._id}`}
                   >
-                    پرداخت
-                  </button>
+                      پرداخت
+                  </Link>
+                      </button>
                 </div>
               </div>
             </div>
