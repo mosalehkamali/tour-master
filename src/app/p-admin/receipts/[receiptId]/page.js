@@ -1,17 +1,36 @@
-"use client"
-import React, { useState } from "react";
+"use client";
+import { useRouter } from "next/navigation";
+import React, { useEffect, useState } from "react";
+import Swal from "sweetalert2";
 
-const ReceiptDetailPage = () => {
-  // داده‌های استاتیک مربوط به رسید
-  const receiptData = {
-    id: 1,
-    payer: "علی رضایی",
-    amount: 1500000,
-    status: "در انتظار تایید",
-    image: "/images/receipt-sample.jpg" // مسیر تصویر رسید
-  };
+const ReceiptDetailPage = ({ params }) => {
+const router = useRouter()    
+    const receiptId = params.receiptId;
+  const [receiptData, setreceiptData] = useState({});
 
-  const [confirmedAmount, setConfirmedAmount] = useState(receiptData.amount);
+  useEffect(() => {
+   const fetchReceiptDetails = async (receiptId) => {
+      try {
+        const res = await fetch(`/api/receipts/${receiptId}`);
+
+        if (!res.ok) {
+          const data = await res.json();
+          throw new Error(data.error || "خطا در دریافت اطلاعات رسید");
+        }
+
+        const data = await res.json();
+        return setreceiptData(data.receipt);
+      } catch (err) {
+        console.error("Error fetching receipt:", err);
+        Swal.fire("خطا", err.message, "error");
+        return null;
+      }
+    };
+    fetchReceiptDetails(receiptId)
+    
+}, []);
+
+  const [confirmedAmount, setConfirmedAmount] = useState();
   const [notes, setNotes] = useState(""); // توضیحات اضافه برای رسید
   const [loading, setLoading] = useState(false);
   const [isImageModalOpen, setIsImageModalOpen] = useState(false);
@@ -38,11 +57,45 @@ const ReceiptDetailPage = () => {
   };
 
   // حذف رسید (شبیه‌سازی شده)
-  const handleDelete = () => {
-    if (window.confirm("آیا از حذف این رسید مطمئن هستید؟")) {
-      alert("رسید حذف شد!");
-      // در اینجا می‌توانید عملیات حذف از دیتابیس را اضافه کنید.
-    }
+  const handleDelete = async() => {
+    const result = await Swal.fire({
+        title: "آیا مطمئنی؟",
+        text: "این رسید برای همیشه حذف خواهد شد!",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "بله، حذف کن",
+        cancelButtonText: "نه، بی‌خیال",
+      });
+  
+      if (result.isConfirmed) {
+        try {
+          const res = await fetch(`/api/receipts/delete/${receiptId}`, {
+            method: "DELETE",
+          });
+  
+          const data = await res.json();
+  
+          if (!res.ok) {
+            throw new Error(data.error || "خطا در حذف رسید");
+          }
+  
+          await Swal.fire({
+            title: "حذف شد!",
+            text: "رسید با موفقیت حذف شد.",
+            icon: "success",
+            confirmButtonText: "باشه",
+          });
+  
+          router.back(); // رفرش صفحه با useRouter
+        } catch (error) {
+          Swal.fire({
+            title: "خطا!",
+            text: error.message,
+            icon: "error",
+            confirmButtonText: "باشه",
+          });
+        }
+      }
   };
 
   return (
@@ -51,28 +104,31 @@ const ReceiptDetailPage = () => {
       <div className="receipt-card">
         <div className="receipt-info">
           <p>
-            <strong>شماره رسید:</strong> {receiptData.id}
+            <strong>تور:</strong> {receiptData.tour?.name}
           </p>
           <p>
-            <strong>پرداخت‌کننده:</strong> {receiptData.payer}
+            <strong>قیمت تور:</strong> {receiptData.tour?.price.toLocaleString()}
           </p>
           <p>
-            <strong>مبلغ اولیه:</strong> {receiptData.amount.toLocaleString()} تومان
+            <strong>پرداخت‌کننده:</strong> {receiptData.traveler?.name}
           </p>
           <p>
-            <strong>وضعیت:</strong> {receiptData.status}
+            <strong>مبلغ تایید شده:</strong> {receiptData.amount?.toLocaleString()}{" "}
+            تومان
+          </p>
+          <p>
+            <strong>وضعیت:</strong> {receiptData?.status==="paid"?"در انتظار تایید":"تایید شده"}
           </p>
         </div>
         <div className="receipt-image" onClick={handleImageClick}>
-          <img src={receiptData.image} alt="Receipt Image" />
+          <img src={receiptData?.image} alt="Receipt Image" />
         </div>
       </div>
-      
+
       <form className="confirm-form" onSubmit={handleConfirm}>
         <label>مبلغ تایید شده:</label>
         <input
           type="number"
-          value={confirmedAmount}
           onChange={(e) => setConfirmedAmount(e.target.value)}
           required
         />
@@ -80,8 +136,8 @@ const ReceiptDetailPage = () => {
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
-          placeholder="توضیحات اضافی در مورد رسید..."
-          rows="4"
+          placeholder="توضیحات اضافی برای مسافر..."
+          rows="1"
         />
         <button type="submit" disabled={loading}>
           {loading ? "در حال تایید..." : "تایید رسید"}
@@ -190,7 +246,11 @@ const ReceiptDetailPage = () => {
         }
         .confirm-form button {
           padding: 1rem 2rem;
-          background: linear-gradient(45deg, hsl(219, 77%, 60%), hsl(132, 76%, 59%));
+          background: linear-gradient(
+            45deg,
+            hsl(219, 77%, 60%),
+            hsl(132, 76%, 59%)
+          );
           color: #fff;
           border: none;
           border-radius: 25px;

@@ -1,5 +1,5 @@
-import connectToDB from "@/base/configs/db";
-import receiptModel from "@/base/models/Receipt";
+import connectToDB from "base/configs/db";
+import receiptModel from "base/models/Receipt";
 import { NextResponse } from "next/server";
 
 export async function GET(req, { params }) {
@@ -7,11 +7,11 @@ export async function GET(req, { params }) {
     await connectToDB();
 
     const { id } = params;
-
+    
     const receipt = await receiptModel.findById(id)
-      .populate("traveler") // اطلاعات پرداخت‌کننده
-      .populate("tour");     // اطلاعات تور
-
+    .populate("traveler") // اطلاعات پرداخت‌کننده
+    .populate("tour");     // اطلاعات تور
+    
     if (!receipt) {
       return NextResponse.json({ error: "رسید یافت نشد" }, { status: 404 });
     }

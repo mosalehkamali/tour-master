@@ -37,7 +37,6 @@ const PaymentPage = () => {
     const formData = new FormData();
     formData.append("traveler", traveler);
     formData.append("tour", tour);
-    formData.append("amount", tourInfo.price);
     formData.append("status", "paid");
     formData.append("description", "رسید ثبت‌شده توسط کاربر");
     formData.append("image", receipt);

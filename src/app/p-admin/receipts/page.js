@@ -1,4 +1,5 @@
 "use client"
+import Link from "next/link";
 import React, { useEffect, useState } from "react";
 import Swal from "sweetalert2";
 
@@ -30,8 +31,8 @@ const ReceiptsPage = () => {
 
   // تابع کمکی برای تعیین کلاس وضعیت
   const getStatusClass = (status) => {
-    if (status === "تایید شده") return "status confirmed";
-    if (status === "رد شده") return "status rejected";
+    if (status === "confirmed") return "status confirmed";
+    if (status === "rejected") return "status rejected";
     return "status pending"; // برای "در انتظار تایید"
   };
 
@@ -39,29 +40,32 @@ const ReceiptsPage = () => {
     <div className="receipts-page">
       <h1>لیست رسیدها</h1>
       <div className="receipts-container">
-        {receiptsData.map((receipt) => (
-          <div key={receipt.id} className="receipt-card">
+        {receiptsData.map((receipt,index) => (
+            <Link href={`/p-admin/receipts/${receipt._id}`}>
+
+          <div key={receipt._id} className="receipt-card">
             <div className="receipt-details">
               <p className="receipt-id">
-                <strong>شماره رسید:</strong> {receipt.id}
+                <strong>شماره رسید:</strong> {index+1}
               </p>
               <p className="receipt-payer">
-                <strong>پرداخت‌کننده:</strong> {receipt.payer}
+                <strong>پرداخت‌کننده:</strong> {receipt.traveler.name}
               </p>
               <p className="receipt-amount">
                 <strong>مبلغ:</strong> {receipt.amount.toLocaleString()} تومان
               </p>
               <p className="receipt-tour">
-                <strong>نام تور:</strong> {receipt.tourName}
+                <strong>نام تور:</strong> {receipt.tour.name}
               </p>
               <p className="receipt-status">
                 <strong>وضعیت پرداخت:</strong>{" "}
                 <span className={getStatusClass(receipt.status)}>
-                  {receipt.status}
+                  {receipt.status === "paid"?"در انتظار تایید":"تایید شده"}
                 </span>
               </p>
             </div>
           </div>
+            </Link>
         ))}
       </div>
 

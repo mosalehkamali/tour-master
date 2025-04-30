@@ -13,7 +13,7 @@ const Header = ({ toggleModal }) => {
     async function getCookie() {
       // کوکی‌ها رو از document.cookie می‌خونیم
       const cookies = document.cookie.split("; ");
-
+      
       for (let cookie of cookies) {
         const [cookieName, cookieValue] = cookie.split("=");
 
@@ -23,7 +23,7 @@ const Header = ({ toggleModal }) => {
           const data = await res.json();
           setUser(data);
           setCartCount(data.carts.length);
-          
+          break;
         } else {
           setIsAuthenticated(false);
         }
