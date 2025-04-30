@@ -5,7 +5,7 @@ require("./Traveler");
 const schema = new mongoose.Schema({
   tour: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: "Tuor",
+    ref: "Tour",
     required: true,
   },
   traveler: {

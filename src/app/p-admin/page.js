@@ -1,137 +1,87 @@
-"use client";
-// app/page.js
-import React, { useEffect, useState } from "react";
-import styled from "styled-components";
-import { FaTrash, FaPlus, FaEdit } from "react-icons/fa";
-import { useRouter } from "next/navigation"; // useRouter in App Router
-import Swal from "sweetalert2";
+"use client"
+import React from "react";
 import Link from "next/link";
 
-const TourList = styled.div`
-  display: flex;
-  flex-direction: column;
-  margin: 20px;
-`;
-
-const TourCard = styled.div`
-  background-color: white;
-  padding: 20px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
-  margin-bottom: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-`;
-
-const Button = styled.button`
-  background-color: var(--red);
-  color: white;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 5px;
-  cursor: pointer;
-  font-size: 16px;
-  &:hover {
-    /* background-color: var(--lowBlue); */
-    opacity: 70%;
-  }
-  transition: all 0.3s ease-in-out;
-`;
-
-const AddTourButton = styled(Button)`
-  background-color: var(--yellow);
-  margin-bottom: 20px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-`;
-
-const TourPageLink = styled.a`
-  color: var(--green);
-  cursor: pointer;
-  text-decoration: none;
-  font-size: 1.5rem;
-  font-weight: 900;
-  user-select: none;
-`;
-
-const HomePage = () => {
-  const [tours, setTours] = useState([]);
-  const router = useRouter();
-
-  useEffect(() => {
-    const fetchTours = async () => {
-      const res = await fetch("/api/tour");
-      const data = await res.json();
-      setTours(data);
-    };
-
-    fetchTours();
-  }, []);
-
-  const handleDelete = async (id) => {
-    // نمایش پیام تایید
-    const result = await Swal.fire({
-      title: "آیا مطمئن هستید؟",
-      text: "این تور حذف خواهد شد!",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonText: "بله، حذف کن!",
-      cancelButtonText: "خیر، انصراف",
-    });
-
-    // اگر کاربر تایید کرد
-    if (result.isConfirmed) {
-      await fetch(`/api/tour/remove/${id}`, {
-        method: "DELETE",
-      });
-
-      // به‌روزرسانی وضعیت تورها پس از حذف
-      setTours(tours.filter((tour) => tour._id !== id));
-
-      // نمایش پیام موفقیت
-      Swal.fire("حذف شد!", "تور با موفقیت حذف شد.", "success");
-    } else {
-      // اگر کاربر حذف رو لغو کرد، هیچ کاری نکن
-      return;
-    }
-  };
-
+const AdminPanel = () => {
   return (
-    <div style={{ padding: "3rem 1rem" }}>
-      <AddTourButton onClick={() => router.push("/p-admin/add-tour")}>
-        <FaPlus /> اضافه کردن تور جدید
-      </AddTourButton>
-      <TourList>
-        {tours.map((tour) => (
-          <TourCard key={tour._id}>
-            <div>
-              <TourPageLink
-                onClick={() => router.push(`/p-admin/tour/${tour._id}`)}
-              >
-                {tour.name}
-              </TourPageLink>
-              <p>{tour.description}</p>
-              <p>{tour.date}</p>
-              <p>{tour.price}</p>
-            </div>
-            <div style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
-              <Link href={"p-admin/edit-tour/"+tour._id}>
-              <Button style={{backgroundColor:"var(--blue)"}}>
-                <FaEdit />
-              </Button>
-              </Link>
+    <div className="panel-container">
+      <header className="panel-header">
+        <h1>پنل ادمین</h1>
+      </header>
+      <div className="button-grid">
+        <Link href="/p-admin/tour">
+          <p className="panel-button">تورها</p>
+        </Link>
+        <Link href="/p-admin/travelers">
+          <p className="panel-button">کاربران</p>
+        </Link>
+        <Link href="/p-admin/receipts">
+          <p className="panel-button">رسیدها</p>
+        </Link>
+      </div>
 
-              <Button onClick={() => handleDelete(tour._id)}>
-                <FaTrash />
-              </Button>
-            </div>
-          </TourCard>
-        ))}
-      </TourList>
+      <style jsx>{`
+        .panel-container {
+          min-height: 100vh;
+          background: linear-gradient(135deg, #0d324d, #7f5a83);
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          padding: 2rem;
+          animation: fadeIn 1s ease;
+        }
+        .panel-header h1 {
+          color: #fff;
+          font-size: 2.8rem;
+          margin-bottom: 2rem;
+          text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+          animation: slideDown 0.5s ease-out;
+        }
+        .button-grid {
+          display: grid;
+          grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+          gap: 1.5rem;
+          width: 100%;
+          max-width: 800px;
+        }
+        .panel-button {
+          background: #fff;
+          text-align: center;
+          font-size: 1.5rem;
+          color: #333;
+          padding: 1rem;
+          border-radius: 20px;
+          text-decoration: none;
+          font-weight: bold;
+          box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+          transition: transform 0.3s ease, background 0.3s ease, color 0.3s ease;
+        }
+        .panel-button:hover {
+          transform: scale(1.05);
+          background: linear-gradient(135deg, #7f5a83, #0d324d);
+          color: #fff;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; }
+          to { opacity: 1; }
+        }
+        @keyframes slideDown {
+          from { transform: translateY(-20px); opacity: 0; }
+          to { transform: translateY(0); opacity: 1; }
+        }
+        @media (max-width: 768px) {
+          .panel-header h1 {
+            font-size: 2rem;
+          }
+          .panel-button {
+            font-size: 1.2rem;
+            padding: 0.8rem;
+          }
+        }
+      `}</style>
     </div>
   );
 };
 
-export default HomePage;
+export default AdminPanel;
