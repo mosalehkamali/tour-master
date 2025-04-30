@@ -2,17 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 export default function CartPage({ params }) {
+  const router = useRouter();
   const [cartTours, setCartTours] = useState([]);
   const { id } = params;
+
   useEffect(() => {
     // دریافت لیست تورهای سبد خرید کاربر از API
     async function fetchCart() {
       try {
         const res = await fetch(`/api/travelers/basket/${id}`);
         const data = await res.json();
-        console.log(data);
 
         if (!res.ok) {
           throw new Error(data.error || "خطا در دریافت سبد خرید");
@@ -61,8 +63,49 @@ export default function CartPage({ params }) {
     }
   };
 
-  const handleRemove = (tourId) => {
-    setCartTours(cartTours.filter((tour) => tour.id !== tourId));
+  const handleRemove = async (tourId) => {
+    
+    const result = await Swal.fire({
+      title: "آیا مطمئنی؟",
+      text: "این تور از سبد خریدت حذف می‌شود!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "بله، حذف کن!",
+      cancelButtonText: "نه، بی‌خیال!",
+    });
+
+    if (!result.isConfirmed) return;
+
+    try {
+      const res = await fetch("/api/travelers/basket/remove", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ tourId }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "خطایی رخ داد");
+      }
+
+      await Swal.fire({
+        icon: "success",
+        title: "حذف شد!",
+        text: "تور با موفقیت از سبد خرید حذف شد.",
+        confirmButtonText: "باشه",
+      });
+
+      setCartTours((prev) => prev.filter((tour) => tour._id !== tourId));
+    } catch (err) {
+      console.error(err);
+      Swal.fire({
+        icon: "error",
+        title: "خطا",
+        text: err.message || "مشکلی در حذف تور پیش آمد.",
+        confirmButtonText: "باشه",
+      });
+    }
   };
 
   const handlePayment = (tour) => {
@@ -78,7 +121,7 @@ export default function CartPage({ params }) {
       ) : (
         <div className="cart-items">
           {cartTours.map((tour) => (
-            <div key={tour.id} className="cart-item">
+            <div key={tour._id} className="cart-item">
               <div className="item-image">
                 <img src={tour.image} alt={tour.name} />
               </div>
@@ -91,7 +134,7 @@ export default function CartPage({ params }) {
                 <div className="button-container">
                   <button
                     className="remove-btn"
-                    onClick={() => handleRemove(tour.id)}
+                    onClick={() => handleRemove(tour._id)}
                   >
                     حذف از سبد خرید
                   </button>
