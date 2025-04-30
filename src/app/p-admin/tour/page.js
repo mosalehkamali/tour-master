@@ -117,7 +117,7 @@ const HomePage = () => {
               <p>{tour.price}</p>
             </div>
             <div style={{display:"flex",flexDirection:"column",gap:"1rem"}}>
-              <Link href={"p-admin/edit-tour/"+tour._id}>
+              <Link href={"/p-admin/edit-tour/"+tour._id}>
               <Button style={{backgroundColor:"var(--blue)"}}>
                 <FaEdit />
               </Button>

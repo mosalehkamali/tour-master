@@ -14,7 +14,7 @@ export async function DELETE(request, { params }) {
     }
 
   await tourModel.deleteOne({ _id: id });
-  await travelerModel.deleteMany({tour:id})
+  
   if (tour.image) {
     const imagePath = path.join(process.cwd(), "uploads", tour.image.replace("/api/uploads/", ""));
     if (fs.existsSync(imagePath)) {

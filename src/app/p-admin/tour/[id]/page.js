@@ -63,7 +63,8 @@ const Button = styled.button`
 `;
 const TourDetailsPage = ({ params }) => {
   const { id } = params;
-  const [tourDetails, setTourDetails] = useState(null);
+  const [tourDetails, setTourDetails] = useState();
+  const [debts, setDebts] = useState("");
   const router = useRouter();
 
   useEffect(() => {
@@ -80,7 +81,9 @@ const TourDetailsPage = ({ params }) => {
     return <p>Loading...</p>;
   }
 
-  const { tour, passengers } = tourDetails;
+  const { tour } = tourDetails;
+
+  const passengers = tour.travelers;
 
   const exportExcel = async () => {
     const wb = XLSX.utils.book_new();
@@ -88,6 +91,24 @@ const TourDetailsPage = ({ params }) => {
 
     XLSX.utils.book_append_sheet(wb, ws, "sheet1");
     XLSX.writeFile(wb, `${tour.name}.xlsx`);
+  };
+
+  const getDebt = async (travelerId) => {
+    try {
+      const res = await fetch(`/api/travelers/userTours/${travelerId}/`);
+      const data = await res.json();
+
+      if (!res.ok) throw new Error(data.error || "خطا در دریافت اطلاعات");
+
+      data.tours.map((tour) => {
+        const tourId = tour._id;
+        if (tourId.toString() === id) {
+          setDebts(tour.remainingDebt);
+        }
+      });
+    } catch (err) {
+      console.log(err.message);
+    }
   };
 
   return (
@@ -124,6 +145,12 @@ const TourDetailsPage = ({ params }) => {
             <InfoBlock>
               <InfoLabel>آدرس:</InfoLabel>
               <InfoValue>{passenger.address}</InfoValue>
+            </InfoBlock>
+            <InfoBlock>
+              <InfoLabel>بدهی:</InfoLabel>
+              <InfoValue onLoad={getDebt(passenger._id)}>
+                {debts?.toLocaleString()}
+              </InfoValue>
             </InfoBlock>
           </PassengerCard>
         ))}

@@ -55,7 +55,7 @@ const ReceiptsPage = () => {
                 <strong>مبلغ:</strong> {receipt.amount.toLocaleString()} تومان
               </p>
               <p className="receipt-tour">
-                <strong>نام تور:</strong> {receipt.tour.name}
+                <strong>نام تور:</strong> {receipt.tour?.name}
               </p>
               <p className="receipt-status">
                 <strong>وضعیت پرداخت:</strong>{" "}
