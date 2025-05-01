@@ -1,8 +1,10 @@
 "use client"
+import Link from 'next/link';
 // pages/dashboard.js
 import React from 'react';
     
-export default function Dashboard() {
+export default function Dashboard({params}) {
+  const {id}=params
   return (
     <div>
       <section className="user-summary">
@@ -10,15 +12,19 @@ export default function Dashboard() {
         <div className="cards">
           <div className="card">
             <h3>تورها</h3>
-            <p>۵ تور</p>
+            <p>لیست تور های ثبت نام شده</p>
           </div>
           <div className="card">
-            <h3>پرداخت تکمیل</h3>
-            <p>۸۰٪</p>
+            <Link href={`${id}/receipts`}>
+            <h3>وضعیت پرداخت </h3>
+            <p>رسید های ارسال شده</p>
+            </Link>
           </div>
           <div className="card">
-            <h3>امتیاز کاربری</h3>
-            <p>۴.۵/۵</p>
+            <Link href={`${id}/basket`}>
+            <h3>سبد خرید</h3>
+            <p>لیست تور های تحت نظر</p>
+            </Link>
           </div>
         </div>
       </section>

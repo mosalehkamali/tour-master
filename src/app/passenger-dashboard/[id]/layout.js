@@ -1,11 +1,11 @@
 "use client"
 
 // pages/layout.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 export default function Layout({ children }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
+  const [user , setUser]=useState({})
   const toggleMenu = () => {
     setIsMenuOpen((prev) => !prev);
   };
@@ -16,12 +16,21 @@ export default function Layout({ children }) {
     }
   };
 
+  useEffect(()=>{
+    const getMe = async()=>{
+      const res= await fetch("/api/travelers/getme")
+      const user = await res.json()
+      setUser(user)
+    }
+    getMe()
+  },[])
+
   return (
     <div className="container">
       {/* Header */}
       <header className="header">
         <div className="header-left">
-          <h1>داشبورد مسافران</h1>
+          <h1>{user.name}</h1>
         </div>
         <div className="header-right mobile-only">
           <button className="menu-toggle" onClick={toggleMenu}>
@@ -36,18 +45,18 @@ export default function Layout({ children }) {
           <nav>
             <ul className="menu">
               <li>
-                <a href="#" className="menu-item" onClick={closeMenu}>
+                <a href={`/passenger-dashboard/${user._id}/`} className="menu-item" onClick={closeMenu}>
                   تورهای ثبت‌نام شده
                 </a>
               </li>
               <li>
-                <a href="#" className="menu-item" onClick={closeMenu}>
+                <a href={`/passenger-dashboard/${user._id}/receipts`} className="menu-item" onClick={closeMenu}>
                   وضعیت پرداخت
                 </a>
               </li>
               <li>
-                <a href="#" className="menu-item" onClick={closeMenu}>
-                  تنظیمات کاربر
+                <a href={`/passenger-dashboard/${user._id}/basket`} className="menu-item" onClick={closeMenu}>
+                سبد خرید
                 </a>
               </li>
             </ul>
