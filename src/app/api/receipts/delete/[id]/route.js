@@ -26,7 +26,7 @@ export async function DELETE(req, { params }) {
     // مسیر فایل
     const receiptPath = path.join(
       process.cwd(),
-      "receipts",
+      "Receipts",
       receipt.image.replace("/api/receipts/image/", "")
     );
 
