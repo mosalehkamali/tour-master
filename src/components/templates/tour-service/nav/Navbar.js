@@ -22,7 +22,7 @@ const Header = ({ toggleModal }) => {
           const res = await fetch("/api/travelers/getme");
           const data = await res.json();
           setUser(data);
-          setCartCount(data.carts.length);
+          setCartCount(data.carts?.length);
           break;
         } else {
           setIsAuthenticated(false);
