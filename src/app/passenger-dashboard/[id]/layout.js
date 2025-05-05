@@ -1,9 +1,12 @@
 "use client"
 
+import { useRouter } from 'next/navigation';
 // pages/layout.js
 import React, { useEffect, useState } from 'react';
+import Swal from 'sweetalert2';
 
 export default function Layout({ children }) {
+  const router = useRouter()
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [user , setUser]=useState({})
   const toggleMenu = () => {
@@ -24,6 +27,23 @@ export default function Layout({ children }) {
     }
     getMe()
   },[])
+
+  const logout= async ()=>{
+    const result = await Swal.fire({
+          title: "میخواهید از حساب کاربری خود خارج شوید؟",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "بله خارج شو!",
+          cancelButtonText: "نه، بی‌خیال!",
+        });
+    
+        if (!result.isConfirmed) return;
+    
+    const res=  await fetch("/api/travelers/logout")
+    if(res.status === 200){
+      router.replace("/")
+    } 
+  }
 
   return (
     <div className="container">
@@ -58,6 +78,11 @@ export default function Layout({ children }) {
                 <a href={`/passenger-dashboard/${user._id}/basket`} className="menu-item" onClick={closeMenu}>
                 سبد خرید
                 </a>
+              </li>
+              <li>
+                <p  style={{background:"rgba(206, 90, 90, 0.726)"}} className="menu-item" onClick={logout}>
+                خروج از حساب کاربری
+                </p>
               </li>
             </ul>
           </nav>
@@ -147,6 +172,7 @@ export default function Layout({ children }) {
           font-size: 18px;
           padding: 10px 15px;
           border-radius: 8px;
+          cursor: pointer;
           transition: background 0.3s, transform 0.3s;
         }
         .menu-item:hover {
