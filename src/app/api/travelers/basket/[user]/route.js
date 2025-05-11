@@ -1,16 +1,15 @@
 import { NextResponse } from "next/server";
 import connectToDB from "base/configs/db";
 import travelerModel from "base/models/Traveler";
-import tourModel from "base/models/Tour";
+import Tour from "base/models/Tour";
 import { cookies } from "next/headers";
 
 export async function GET() {
   try {
     await connectToDB();
 
-    const cookieStore = cookies();
-    const userId = cookieStore.get("user")?.value;
-
+    // گرفتن شناسه کاربر از کوکی
+    const userId = cookies().get("user")?.value;
     if (!userId) {
       return NextResponse.json(
         { error: "کاربر یافت نشد. لطفاً وارد شوید." },
@@ -18,13 +17,16 @@ export async function GET() {
       );
     }
 
-    // پیدا کردن مسافر
+    // پیدا کردن مسافر و populate کردن هر آیتم carts.tour
     const traveler = await travelerModel
       .findById(userId)
-      .populate({ path: "carts", model: tourModel })
+      .populate({
+        path: "carts.tour",
+        model: Tour,
+        select: "name price date image description", // فقط فیلدهای لازم
+      })
       .lean();
 
-    const carts = traveler.carts.slice().reverse();
     if (!traveler) {
       return NextResponse.json(
         { error: "اطلاعات کاربر موجود نیست." },
@@ -32,9 +34,15 @@ export async function GET() {
       );
     }
 
-    return NextResponse.json({ tours: carts }, { status: 200 });
+    // برعکس کردن ترتیب اگر لازم باشه
+    const carts = Array.isArray(traveler.carts)
+      ? traveler.carts.slice().reverse()
+      : [];
+
+    // پاسخ شامل هر آیتم سبد: { tour: { …تور }, companions: [ … ] }
+    return NextResponse.json({ carts }, { status: 200 });
   } catch (err) {
-    console.error(err);
+    console.error("GET /api/travelers/basket error:", err);
     return NextResponse.json(
       { error: "خطای سرور در دریافت سبد خرید." },
       { status: 500 }

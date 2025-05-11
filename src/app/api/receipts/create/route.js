@@ -64,10 +64,6 @@ export async function POST(req) {
       user.receipts.push(receiptId);
     }
 
-    // حذف تور از سبد خرید
-    user.carts = user.carts.filter((id) => id.toString() !== tour);
-
-    await user.save();
 
     return NextResponse.json(
       { message: "رسید با موفقیت ایجاد شد", receipt: tempReceipt },

@@ -2,13 +2,14 @@
 
 import { useEffect, useState } from "react";
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
 
-export default function CartPage({ params }) {
+export default function CartPage() {
   const router = useRouter();
   const [cartTours, setCartTours] = useState([]);
-  const { id } = params;
+   const params = useParams();         
+  const id = params?.id;      
 
   useEffect(() => {
     // دریافت لیست تورهای سبد خرید کاربر از API
@@ -21,7 +22,7 @@ export default function CartPage({ params }) {
           throw new Error(data.error || "خطا در دریافت سبد خرید");
         }
 
-        setCartTours(data.tours); // فرض: آرایه‌ای از تورها
+        setCartTours(data.carts); // فرض: آرایه‌ای از تورها
       } catch (err) {
         Swal.fire({
           icon: "error",
