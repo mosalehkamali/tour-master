@@ -76,12 +76,12 @@ const PaymentPage = () => {
       Swal.fire({
         icon: "success",
         title: "رسید با موفقیت ثبت شد",
-        confirmButtonText: "رفتن به سبد خرید",
+        confirmButtonText: "دیدن وضعیت پرداخت",
         showCancelButton: true,
         cancelButtonText: "ماندن در همین صفحه",
       }).then((result) => {
         if (result.isConfirmed) {
-          router.push(`/passenger-dashboard/${traveler}/basket`);
+          router.push(`/passenger-dashboard/${traveler}/receipts`);
         } else {
           router.refresh();
         }
