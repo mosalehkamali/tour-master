@@ -12,8 +12,6 @@
     "@emotion/react": "^11.14.0",
     "@emotion/styled": "^11.14.0",
     "@mui/material": "^6.4.4",
-    "bcryptjs": "^2.4.3",
-    "jsonwebtoken": "^9.0.2",
     "lucide-react": "^0.475.0",
     "mongoose": "^8.6.2",
     "next": "14.2.11",
