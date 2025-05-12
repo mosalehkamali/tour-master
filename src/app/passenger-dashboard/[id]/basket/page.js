@@ -8,21 +8,26 @@ import Link from "next/link";
 export default function CartPage() {
   const router = useRouter();
   const [cartTours, setCartTours] = useState([]);
-   const params = useParams();         
-  const id = params?.id;      
+  const params = useParams();
+  const id = params?.id;
 
   useEffect(() => {
-    // دریافت لیست تورهای سبد خرید کاربر از API
+    if (!id) return;
     async function fetchCart() {
       try {
         const res = await fetch(`/api/travelers/basket/${id}`);
         const data = await res.json();
-
+        
         if (!res.ok) {
           throw new Error(data.error || "خطا در دریافت سبد خرید");
         }
+        
+        if (!Array.isArray(data.carts)) {
+          throw new Error("مشکلی در ساختار داده برگشتی");
+        }
+        console.log(data.carts);
 
-        setCartTours(data.carts); // فرض: آرایه‌ای از تورها
+        setCartTours(data.carts);
       } catch (err) {
         Swal.fire({
           icon: "error",
@@ -33,7 +38,8 @@ export default function CartPage() {
     }
 
     fetchCart();
-  }, []);
+  }, [id]);
+
 
   const handleRemove = async (tourId) => {
     const result = await Swal.fire({
@@ -94,29 +100,29 @@ export default function CartPage() {
           {cartTours.map((tour) => (
             <div key={tour._id} className="cart-item">
               <div className="item-image">
-                <img src={tour.image} alt={tour.name} />
+                <img src={tour.tour.image} alt={tour.tour.name} />
               </div>
               <div className="item-details">
-                <h2 className="item-name">{tour.name}</h2>
-                <p className="item-description">{tour.description}</p>
+                <h2 className="item-name">{tour.tour.name}</h2>
+                <p className="item-description">{tour.tour.description}</p>
                 <p className="item-price">
-                  {tour.price.toLocaleString()} تومان
+                  {tour.tour.price.toLocaleString()} تومان
                 </p>
                 <div className="button-container">
                   <button
                     className="remove-btn"
-                    onClick={() => handleRemove(tour._id)}
+                    onClick={() => handleRemove(tour.tour._id)}
                   >
                     حذف از سبد خرید
                   </button>
                   <button className="payment-btn">
-                  <Link
-                  style={{color:"#fff",width:"100%"}}
-                    href={`/passenger-dashboard/${id}/basket/payment/${tour._id}`}
-                  >
+                    <Link
+                      style={{ color: "#fff", width: "100%" }}
+                      href={`/passenger-dashboard/${id}/basket/payment/${tour.tour._id}`}
+                    >
                       پرداخت
-                  </Link>
-                      </button>
+                    </Link>
+                  </button>
                 </div>
               </div>
             </div>

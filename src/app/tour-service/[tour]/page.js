@@ -130,8 +130,7 @@ function tour({ params }) {
         text: "می‌خوای ادامه بدی یا بری به سبد خرید؟",
         icon: "success",
         showCancelButton: true,
-        confirmButtonText: "اوکی",
-        cancelButtonText: "ادامه و پرداخت",
+          cancelButtonText: "ادامه و پرداخت",
         reverseButtons: true,
       }).then((result) => {
         if (result.isConfirmed) {
@@ -210,7 +209,7 @@ function tour({ params }) {
             name="birthDate"
             value={passenger.birthDate}
             onChange={handleChange}
-            placeholder="تاریخ تولد"
+            placeholder="سن"
             className="input"
           />
           <input
