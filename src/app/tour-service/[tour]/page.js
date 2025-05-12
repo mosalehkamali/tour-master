@@ -129,15 +129,9 @@ function tour({ params }) {
         title: "تور به سبد خرید شما اضافه شد!",
         text: "می‌خوای ادامه بدی یا بری به سبد خرید؟",
         icon: "success",
-        showCancelButton: true,
-          cancelButtonText: "ادامه و پرداخت",
-        reverseButtons: true,
+        confirmButtonText: "ادامه و پرداخت",
       }).then((result) => {
         if (result.isConfirmed) {
-          // ✅ رفرش صفحه با useRouter
-          router.refresh();
-        } else if (result.dismiss === Swal.DismissReason.cancel) {
-          // 📦 ریدایرکت به صفحه سبد خرید
           router.push(`/passenger-dashboard/${user}/basket/payment/${tourId}`);
         }
       });

@@ -12,6 +12,7 @@ const PaymentPage = () => {
 
   // داده‌های تور جهت پرداخت (بدون توضیحات)
   const [tourInfo,setTourInfo] =useState({}) 
+  const [userInfo,setUserInfo] =useState({}) 
  
   useEffect(()=>{
   async function fetchTourInfo() {
@@ -38,6 +39,48 @@ const PaymentPage = () => {
 
  },[tour])
 
+
+ //گرفتن اطلاعات کاربر
+  useEffect(()=>{
+  async function fetchTravelerInfo() {
+    try {
+      const res = await fetch("/api/travelers/getme");
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || 'خطا در دریافت اطلاعات کاربر');
+      }
+      setUserInfo(data)
+    } catch (err) {
+      Swal.fire({
+        icon: 'error',
+        title: 'خطا!',
+        text: err.message,
+      });
+    } 
+  }
+
+  if (traveler) {
+    fetchTravelerInfo();
+  }
+  
+},[traveler])
+
+//مبلغ کل بدهی شخص
+const [debt, setDebt] = useState();
+useEffect(()=>{
+  function calDebt(){
+    userInfo.carts?.map((cart)=>{
+      if (cart.tour.toString() === tour.toString()) {
+        const population =(cart.companions.length + 1)
+        const debt = tourInfo.price * population;
+        setDebt({debt,population});
+      }
+    })
+  }
+  calDebt()
+},[userInfo])
+
   // مدیریت فایل رسید پرداخت
   const [receipt, setReceipt] = useState(null);
 
@@ -48,7 +91,7 @@ const PaymentPage = () => {
     }
   };
 
-  // عملیات نهایی پرداخت (شبیه‌سازی شده)
+  // عملیات نهایی پرداخت 
   const handlePaymentConfirmation = async () => {
     if (!receipt) {
       return Swal.fire("خطا", "لطفاً تصویر رسید را انتخاب کنید", "error");
@@ -77,8 +120,6 @@ const PaymentPage = () => {
         icon: "success",
         title: "رسید با موفقیت ثبت شد",
         confirmButtonText: "دیدن وضعیت پرداخت",
-        showCancelButton: true,
-        cancelButtonText: "ماندن در همین صفحه",
       }).then((result) => {
         if (result.isConfirmed) {
           router.push(`/passenger-dashboard/${traveler}/receipts`);
@@ -102,7 +143,7 @@ const PaymentPage = () => {
             <strong>تاریخ تور:</strong> {tourInfo.date}
           </p>
           <p className="tour-price">
-            <strong>قیمت:</strong> {tourInfo.price?.toLocaleString()} تومان
+            <strong>قیمت:</strong> {debt?.debt.toLocaleString()} تومان برای {debt?.population} نفر
           </p>
         </div>
 
