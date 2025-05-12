@@ -17,11 +17,11 @@ export default function CartPage() {
       try {
         const res = await fetch(`/api/travelers/basket/${id}`);
         const data = await res.json();
-        
+
         if (!res.ok) {
           throw new Error(data.error || "خطا در دریافت سبد خرید");
         }
-        
+
         if (!Array.isArray(data.carts)) {
           throw new Error("مشکلی در ساختار داده برگشتی");
         }
@@ -39,7 +39,6 @@ export default function CartPage() {
 
     fetchCart();
   }, [id]);
-
 
   const handleRemove = async (tourId) => {
     const result = await Swal.fire({
@@ -73,7 +72,9 @@ export default function CartPage() {
         confirmButtonText: "باشه",
       });
 
-      setCartTours((prev) => prev.filter((tour) => tour._id !== tourId));
+      setCartTours((prev) =>
+        prev.filter((item) => item.tour._id.toString() !== tourId)
+      );
     } catch (err) {
       console.error(err);
       Swal.fire({
