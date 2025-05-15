@@ -73,8 +73,7 @@ const AuthModal = ({ toggleModal }) => {
         if (res.status === 201) {
           Swal.fire({
             icon: "success",
-            title: "ثبت نام موفق",
-            text: "حساب کاربری شما با موفقیت ایجاد شد.",
+            title: "حساب کاربری شما با موفقیت ایجاد شد.",
           }).then(() => {
             window.location.reload();
           });

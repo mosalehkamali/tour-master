@@ -136,7 +136,7 @@ useEffect(()=>{
   return (
     <div className="payment-page">
       <div className="container">
-        <h1 className="page-title">پرداخت تور</h1>
+        <h1 className="page-title">پرداخت هزینه سفر</h1>
         <div className="tour-info">
           <h2 className="tour-name">{tourInfo.name}</h2>
           <p className="tour-date">
@@ -149,6 +149,7 @@ useEffect(()=>{
 
         <div className="card-section">
           <h3 className="section-title">اطلاعات پرداخت به شماره کارت</h3>
+          <p style={{color:"var(--red)"}}>(با کلیک 👇 شماره کارت را کپی کنید)</p>
           <BankCard />
         </div>
 

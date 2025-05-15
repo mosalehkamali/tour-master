@@ -58,7 +58,7 @@ function Course({tour}) {
           </div>
         </div>
         <Link href={"tour-service/"+tour._id} className={styles.courseInfoBtn}>
-          <span>جزئیات و ثبت نام</span>
+          <span>جزئیات و ادامه</span>
           <PiArrowLeftFill />
         </Link>
       </div>

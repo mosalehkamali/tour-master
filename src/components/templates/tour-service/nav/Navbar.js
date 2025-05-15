@@ -3,6 +3,7 @@ import React, { useEffect, useState } from "react";
 import Link from "next/link";
 import { FaUser } from "react-icons/fa";
 import { RiShoppingCartLine } from "react-icons/ri";
+import { LuReceiptText } from "react-icons/lu";
 
 const Header = ({ toggleModal }) => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -13,7 +14,7 @@ const Header = ({ toggleModal }) => {
     async function getCookie() {
       // کوکی‌ها رو از document.cookie می‌خونیم
       const cookies = document.cookie.split("; ");
-      
+
       for (let cookie of cookies) {
         const [cookieName, cookieValue] = cookie.split("=");
 
@@ -38,19 +39,34 @@ const Header = ({ toggleModal }) => {
         <nav className="nav">
           {isAuthenticated ? (
             <div className="auth-info">
-              <Link href={`/passenger-dashboard/${user._id}`} style={{display:"flex",color:"#000",marginRight:"1rem",gap:".5rem"
-              }} className="user">
+              <Link
+                href={`/passenger-dashboard/${user._id}`}
+                style={{
+                  display: "flex",
+                  color: "#000",
+                  marginRight: "1rem",
+                  gap: ".5rem",
+                }}
+                className="user"
+              >
                 <FaUser className="user-icon" size={20} />
                 <span className="user-name">{user.name}</span>
               </Link>
-              <Link href={`/passenger-dashboard/${user._id}/basket`}>
-                <p className="cart-button">
-                  <RiShoppingCartLine size={24} />
-                  {cartCount > 0 && (
-                    <span className="cart-count">{cartCount}</span>
-                  )}
-                </p>
-              </Link>
+              <div className="auth-direction-btns">
+                <Link href={`/passenger-dashboard/${user._id}/basket`}>
+                  <p className="cart-button">
+                    <RiShoppingCartLine size={24} />
+                    {cartCount > 0 && (
+                      <span className="cart-count">{cartCount}</span>
+                    )}
+                  </p>
+                </Link>
+                <Link href={`/passenger-dashboard/${user._id}/receipts`}>
+                  <p className="cart-button">
+                    <LuReceiptText size={24} />
+                  </p>
+                </Link>
+              </div>
             </div>
           ) : (
             <div className="auth-buttons">
@@ -89,6 +105,7 @@ const Header = ({ toggleModal }) => {
           flex-wrap: wrap;
         }
         .nav {
+          width: 100%;
           display: flex;
           align-items: center;
         }
@@ -97,7 +114,10 @@ const Header = ({ toggleModal }) => {
           display: flex;
           align-items: center;
           justify-content: space-between;
-          gap: 80vw;
+        }
+        .auth-direction-btns{
+          display: flex;
+          gap: 1rem;
         }
         .user-icon {
           margin-right: 0.5rem;

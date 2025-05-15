@@ -71,7 +71,7 @@ export default function Layout({ children }) {
               </li>
               <li>
                 <a href={`/passenger-dashboard/${user._id}/receipts`} className="menu-item" onClick={closeMenu}>
-                  وضعیت پرداخت
+                  رسید های پرداختی
                 </a>
               </li>
               <li>

@@ -16,7 +16,7 @@ export default function Dashboard({params}) {
           </div>
           <div className="card">
             <Link href={`${id}/receipts`}>
-            <h3>وضعیت پرداخت </h3>
+            <h3>رسیدهای پرداختی </h3>
             <p>رسید های ارسال شده</p>
             </Link>
           </div>

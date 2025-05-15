@@ -17,6 +17,11 @@ function tour({ params }) {
   const [tour, setTour] = useState([]);
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState();
+  const [showPssenger, setShowPassenger] = useState(false);
+
+  const toggleShowPassenger = () => {
+    setShowPassenger(!showPssenger);
+  };
 
   useEffect(() => {
     async function fetchTourInfo() {
@@ -173,126 +178,145 @@ function tour({ params }) {
         <h4 className={styles.box}>
           <FaCalendarAlt /> تاریخ سفر: {tour.date}
         </h4>
-        <button onClick={addToCarts} className={styles.registerBtn}>
-          <GiArchiveRegister /> ثبت نام
-        </button>
       </div>
 
       {/* // فرم همراهان مسافر */}
-      <div className="container">
-        <h3>افزودن همراه</h3>
-        <form onSubmit={handleSubmit} className="passenger-form">
-          <input
-            type="text"
-            name="name"
-            value={passenger.name}
-            onChange={handleChange}
-            placeholder="نام همراه"
-            className="input"
-          />
-          <input
-            type="text"
-            name="personalId"
-            value={passenger.personalId}
-            onChange={handleChange}
-            placeholder="کدملی"
-            className="input"
-          />
-          <input
-            type="text"
-            name="birthDate"
-            value={passenger.birthDate}
-            onChange={handleChange}
-            placeholder="سن"
-            className="input"
-          />
-          <input
-            type="number"
-            name="phone"
-            value={passenger.phone}
-            onChange={handleChange}
-            placeholder="شماره تماس"
-            className="input"
-          />
-          <button type="submit" className="submit-button">
-            ثبت همراه
-          </button>
-        </form>
+      {showPssenger && (
+        <div className="container">
+          <h3>افزودن همراه</h3>
+          <form onSubmit={handleSubmit} className="passenger-form">
+            <input
+              type="text"
+              name="name"
+              value={passenger.name}
+              onChange={handleChange}
+              placeholder="نام همراه"
+              className="input"
+            />
+            <input
+              type="text"
+              name="personalId"
+              value={passenger.personalId}
+              onChange={handleChange}
+              placeholder="کدملی"
+              className="input"
+            />
+            <input
+              type="text"
+              name="birthDate"
+              value={passenger.birthDate}
+              onChange={handleChange}
+              placeholder="سن"
+              className="input"
+            />
+            <input
+              type="number"
+              name="phone"
+              value={passenger.phone}
+              onChange={handleChange}
+              placeholder="شماره تماس"
+              className="input"
+            />
+            <button type="submit" className="submit-button">
+              ثبت همراه
+            </button>
+          </form>
 
-        <div className="passengers-list">
-          {passengers.map((p, index) => (
-            <div key={index} className="passenger-card">
-              <p>نام: {p.name}</p>
-              <p>کدملی: {p.personalId}</p>
-              <p>تاریخ تولد: {p.birthDate}</p>
-              <p>شماره تماس: {p.phone}</p>
-            </div>
-          ))}
+          <div className="passengers-list">
+            {passengers.map((p, index) => (
+              <div key={index} className="passenger-card">
+                <p>نام: {p.name}</p>
+                <p>کدملی: {p.personalId}</p>
+                <p>تاریخ تولد: {p.birthDate}</p>
+                <p>شماره تماس: {p.phone}</p>
+              </div>
+            ))}
+          </div>
         </div>
-
-        <style jsx>{`
-          .container {
-            max-width: 500px;
-            margin: 2rem auto;
-            padding: 1rem;
-          }
-          .passenger-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-            animation: fadeIn 0.5s ease-in-out;
-          }
-          .input {
-            padding: 0.75rem;
-            font-size: 1rem;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            transition: border-color 0.3s ease;
-          }
-          .input:focus {
-            border-color: #0070f3;
-            outline: none;
-          }
-          .submit-button {
-            padding: 0.75rem;
-            font-size: 1rem;
-            color: #fff;
-            background: linear-gradient(45deg, #0070f3, #00d1b2);
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-          }
-          .submit-button:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-          }
-          .passengers-list {
-            margin-top: 2rem;
-            display: grid;
-            grid-template-columns: repeat(2, auto);
-            gap: 1rem;
-          }
-          .passenger-card {
-            background-color: #f4f4f4;
-            padding: 1rem;
-            border-radius: 5px;
-            margin-bottom: 1rem;
-            transition: transform 0.3s ease;
-          }
-          .passenger-card:hover {
-            transform: translateY(-5px);
-          }
-          @keyframes fadeIn {
-            from {
-              opacity: 0;
-            }
-            to {
-              opacity: 1;
-            }
-          }
-        `}</style>
+      )}
+      <div className="tourBtns">
+        {!showPssenger && (
+          <button onClick={toggleShowPassenger} className={styles.registerBtn}>
+            <GiArchiveRegister /> افزودن همراه
+          </button>
+        )}
+        <button
+          style={{ background: "var(--green)" }}
+          onClick={addToCarts}
+          className={styles.registerBtn}
+        >
+          <GiArchiveRegister /> افزودن به سبد خرید
+        </button>
       </div>
+      <style jsx>{`
+        .tourBtns {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          flex-direction: column;
+          gap: 1rem;
+        }
+        .container {
+          max-width: 500px;
+          margin: 2rem auto;
+          padding: 1rem;
+        }
+        .passenger-form {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+          animation: fadeIn 0.5s ease-in-out;
+        }
+        .input {
+          padding: 0.75rem;
+          font-size: 1rem;
+          border: 1px solid #ccc;
+          border-radius: 5px;
+          transition: border-color 0.3s ease;
+        }
+        .input:focus {
+          border-color: #0070f3;
+          outline: none;
+        }
+        .submit-button {
+          padding: 0.75rem;
+          font-size: 1rem;
+          color: #fff;
+          background: linear-gradient(45deg, #0070f3, #00d1b2);
+          border: none;
+          border-radius: 5px;
+          cursor: pointer;
+          transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .submit-button:hover {
+          transform: scale(1.05);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+        }
+        .passengers-list {
+          margin-top: 2rem;
+          display: grid;
+          grid-template-columns: repeat(2, auto);
+          gap: 1rem;
+        }
+        .passenger-card {
+          background-color: #f4f4f4;
+          padding: 1rem;
+          border-radius: 5px;
+          margin-bottom: 1rem;
+          transition: transform 0.3s ease;
+        }
+        .passenger-card:hover {
+          transform: translateY(-5px);
+        }
+        @keyframes fadeIn {
+          from {
+            opacity: 0;
+          }
+          to {
+            opacity: 1;
+          }
+        }
+      `}</style>
     </div>
   );
 }
