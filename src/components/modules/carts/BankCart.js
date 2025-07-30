@@ -4,6 +4,7 @@ import Swal from "sweetalert2";
 
 const BankCard = () => {
   const cardNumber = "6063 7310 7706 3684"; // شماره کارت نمونه
+  const shabaNumber = "IR910600561170007876076001"; // شماره شبا نمونه
   const cardHolder = "محمد متوسلیان"; // نام صاحب کارت
   
   const handleCopy = () => {
@@ -26,15 +27,39 @@ const BankCard = () => {
         });
       });
   };
+  const handleShabaCopy = () => {
+    navigator.clipboard.writeText(shabaNumber)
+      .then(() => {
+        Swal.fire({
+          icon: 'success',
+          title: "شماره شبا کپی شد",
+          showConfirmButton: false,
+          timer: 1000
+        });
+      })
+      .catch(() => {
+        Swal.fire({
+          icon: 'error',
+          title: 'خطا',
+          text: 'مشکلی در کپی شماره شبا رخ داده است',
+          showConfirmButton: false,
+          timer: 1000
+        });
+      });
+  };
 
   return (
-    <div className="bank-card"onClick={handleCopy}>
+    <div className="bank-card">
       <div className="card-header">
         <span className="bank-name">بانک قرض الحسنه مهر ایران</span>
       </div>
-      <div className="card-number-wrapper">
+      <div className="card-number-wrapper" onClick={handleCopy}>
         <FaRegCopy className="copy-icon" />
         <span dir="ltr" className="card-number">{cardNumber}</span>
+      </div>
+      <div className="card-number-wrapper" onClick={handleShabaCopy}>
+        <FaRegCopy className="copy-icon" />
+        <span style={{fontSize: "1rem"}} dir="ltr" className="card-number">{shabaNumber}</span>
       </div>
       <div className="card-holder">
         {cardHolder}

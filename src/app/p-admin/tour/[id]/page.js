@@ -58,9 +58,10 @@ export default function AdminTourTravelersPage() {
       "تعداد افراد": trav.companions.length + 1,
       "مبلغ کل": trav.expectedTotal,
       "پرداخت شده": trav.paidSum,
-      بدهی: trav.debt,
-      "همراهان (نام،سن،تلفن)": trav.companions
-        .map((c) => `${c.name}-${c.birthDate}-${c.phone}`)
+      "بدهی": trav.debt,
+      "آدرس": trav.address,
+      "همراهان (نام،شناسه ملی،سن،تلفن)": trav.companions
+        .map((c) => `${c.name}-${c.personalId}-${c.birthDate}-${c.phone}`)
         .join("; "),
     }));
     const ws = XLSX.utils.json_to_sheet(rows);
@@ -76,6 +77,36 @@ export default function AdminTourTravelersPage() {
     URL.revokeObjectURL(url);
   };
 
+  const handleDeleteTraveler = async (travelerId) => {
+    const confirmed = await Swal.fire({
+      title: "آیا مطمئن هستید؟",
+      text: "این عملیات غیرقابل بازگشت است!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "بله، حذف شود!",
+      cancelButtonText: "لغو",
+    });
+
+    if (!confirmed.isConfirmed) return;
+
+    try {
+      const res = await fetch(`/api/tour/deletePassenger/${travelerId}`, {
+        method: "DELETE",
+      });
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.error || "خطا در حذف مسافر");
+
+      // حذف از لیست محلی
+      setTravelers((prev) =>
+        prev.filter((trav) => trav.travelerId !== travelerId)
+      );
+
+      Swal.fire({ icon: "success", title: "مسافر حذف شد" });
+    } catch (err) {
+      Swal.fire({ icon: "error", title: "خطا", text: err.message });
+    }
+  };
+
   if (loading) return <p className="loading">در حال بارگذاری...</p>;
   if (!tour) return <p className="error">اطلاعات تور یافت نشد.</p>;
 
@@ -89,7 +120,7 @@ export default function AdminTourTravelersPage() {
           دانلود اکسل
         </button>
       </header>
-    
+
       <section className="tour-info">
         <p>
           <strong>تاریخ:</strong> {tour.date}
@@ -112,28 +143,38 @@ export default function AdminTourTravelersPage() {
         </div>
       </section>
 
-
       <table className="traveler-table">
         <thead>
           <tr>
+            <th>عملیات</th>
             <th>نام</th>
             <th>شناسه ملی</th>
             <th>تلفن</th>
             <th>جمع افراد</th>
             <th>پرداخت شده</th>
             <th>بدهی</th>
+            <th>آدرس</th>
             <th>اطلاعات همراهان</th>
           </tr>
         </thead>
         <tbody>
           {travelers.map((trav) => (
             <tr key={trav.travelerId}>
+              <td>
+                <button
+                  className="delete-btn"
+                  onClick={() => handleDeleteTraveler(trav.travelerId)}
+                >
+                  حذف
+                </button>
+              </td>
               <td>{trav.name}</td>
               <td>{trav.personalId}</td>
               <td>{trav.phone}</td>
               <td>{trav.companions.length + 1}</td>
               <td>{trav.paidSum?.toLocaleString()}</td>
               <td>{trav.debt?.toLocaleString()}</td>
+              <td>{trav.address}</td>
               <td>
                 <ul className="companions-list">
                   {trav.companions.map((c, idx) => (

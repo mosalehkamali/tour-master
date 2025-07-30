@@ -46,7 +46,7 @@ export async function GET(request, { params }) {
     // 4) Fetch only those travelers whose IDs are in tour.travelers
     const travelers = await travelerModel
       .find({ _id: { $in: travelerIds } })
-      .select("name personalId phone carts")
+      .select("name personalId phone carts address")
       .lean();
 
     // 5) For each traveler, extract companions & compute debt
@@ -73,6 +73,7 @@ export async function GET(request, { params }) {
           name: trav.name,
           personalId: trav.personalId,
           phone: trav.phone,
+          address: trav.address,
           companions,
           expectedTotal,
           paidSum,

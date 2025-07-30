@@ -64,6 +64,19 @@ const ZiaratCard = () => {
       borderRadius: "30px",
       cursor: "pointer",
       fontSize: "16px",
+      marginTop:".5rem",
+      fontWeight: "600",
+      transition: "background-color 0.3s ease",
+    },
+    button2: {
+      padding: "10px 20px",
+      backgroundColor: "#000",
+      color: "white",
+      border: "none",
+      borderRadius: "30px",
+      cursor: "pointer",
+      fontSize: "16px",
+      marginTop:".5rem",
       fontWeight: "600",
       transition: "background-color 0.3s ease",
     },
@@ -123,6 +136,20 @@ const ZiaratCard = () => {
                 }
               >
                 ثبت‌نام
+              </button>
+            </Link>
+            <br/>
+            <Link href={"/tour-service/register-guide"}>
+              <button
+                style={styles.button2}
+                onMouseEnter={(e) =>
+                  (e.target.style.backgroundColor = "#007bb5")
+                }
+                onMouseLeave={(e) =>
+                  (e.target.style.backgroundColor = "#000")
+                }
+              >
+               راهنمای ثبت‌نام
               </button>
             </Link>
           </div>
