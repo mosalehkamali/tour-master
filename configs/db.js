@@ -7,7 +7,7 @@ const connectToDB = async () => {
       // await mongoose.connect("mongodb://localhost:27017/Kerman-Tour");
       
       // mongoDb Atlas 
-      await mongoose.connect("mongodb+srv://mosalehk:Mk3020566509@cluster0.sshzl77.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0/Kerman-Tour");
+      await mongoose.connect("mongodb+srv://mosalehkamali:Mk3020566509@cluster0.sshzl77.mongodb.net/Kerman-Tour?retryWrites=true&w=majority&appName=Cluster0");
       
       // Host database
       // await mongoose.connect("mongodb://mohiabad_mosalehk:Mk3020566509@localhost:27017/mohiabad_tourDB");
